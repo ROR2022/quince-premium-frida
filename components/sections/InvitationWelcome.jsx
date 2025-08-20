@@ -20,10 +20,11 @@ export default function WelcomeMessage({ onContinue }) {
   return (
     <div 
     style={{
-        backgroundImage: `url('/images/fondo1.png')`,
+      background: 'linear-gradient(135deg, #eaf4ff 0%, #d6ecff 35%, #c1e3ff 65%, #a9d7ff 100%)',
+        /* backgroundImage: `url('/images/fondo1.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundRepeat: 'no-repeat', */
     }}
     className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       
