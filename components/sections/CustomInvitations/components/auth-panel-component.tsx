@@ -29,7 +29,11 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div 
+    style={{
+      zIndex: 9000,
+    }}
+    className="relative">
       {/* Botón de configuración */}
       <button
         onClick={() => onUpdateAuth({ showAuthPopover: !showAuthPopover })}

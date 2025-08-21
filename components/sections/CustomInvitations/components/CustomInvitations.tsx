@@ -53,7 +53,8 @@ const CustomInvitations: React.FC = () => {
 
   return (
     <section 
-    className="py-16 px-4 relative overflow-hidden bg-gradient-to-br from-purple-100 via-fuchsia-100 to-white">
+    
+    className="py-16 px-4 relative min-h-screen overflow-hidden bg-gradient-to-br from-purple-100 via-fuchsia-100 to-white">
       {/* Decoraciones de fondo */}
       <div 
       style={{ display: "none" }}
@@ -65,7 +66,11 @@ const CustomInvitations: React.FC = () => {
       </div>
 
       {/* Panel de autenticación */}
-      <div className="absolute top-4 right-4 z-50">
+      <div 
+      style={{
+        zIndex: 8000,
+      }}
+      className="absolute top-4 right-4 z-50">
         <AuthPanel
           authState={authState}
           onUpdateAuth={updateAuthState}
