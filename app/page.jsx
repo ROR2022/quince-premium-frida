@@ -18,6 +18,7 @@ import InvitationEnvelope from "../components/sections/InvitationEnvelope"
 import WelcomeMessage from "../components/sections/InvitationWelcome"
 import DecorationElement from "../components/DecorationElement"
 import { PremiumGallery } from "@/components/sections/PremiumGallery"
+import CustomInvitations from "@/components/sections/CustomInvitations/components/CustomInvitations"
 
 export default function WeddingInvitation() {
   const [isOpenInvitation, setIsOpenInvitation] = useState(false);
@@ -42,13 +43,12 @@ export default function WeddingInvitation() {
     return <WelcomeMessage onContinue={handleContinue} />
   }
 
-  // Main Invitation Section
-  // Color Marfil #FFFFE3
-  // Color Verde #89ac76
+  
+  // Color Palo de Rosa #e3aaaa
   return (
     <div 
     style={{
-      background: 'linear-gradient(135deg, #eaf4ff 0%, #d6ecff 35%, #c1e3ff 65%, #a9d7ff 100%)',
+      background: 'linear-gradient(135deg, #f7e6e6, #e3aaaa)',
     }}
     className="min-h-screen">
       {/* <Navigation /> */}
@@ -63,6 +63,7 @@ export default function WeddingInvitation() {
       <GiftsSection />
       {/* <GallerySection /> */}
       <PremiumGallery />
+      <CustomInvitations />
       <BasicCTA />
       
       {/* 🎵 Reproductor de audio fijo */}

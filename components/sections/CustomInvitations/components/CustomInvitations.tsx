@@ -1,0 +1,154 @@
+// ================================================================
+// COMPONENTE PRINCIPAL
+// ================================================================
+
+"use client"
+
+import { useRef } from "react";
+import { useInvitationForm } from "../hooks/use-invitation-form-hook";
+import { DownloadService } from "../services/download.service";
+import { AuthPanel } from "./auth-panel-component";
+import { InvitationForm } from "./invitation-form-component";
+import { ActionButtons } from "./action-buttons-component";
+import { InvitationPreview } from "./invitation-preview-component";
+import { EVENT_INFO } from "../constants/invitation.constants";
+
+
+const CustomInvitations: React.FC = () => {
+  const invitationRef = useRef<HTMLDivElement>(null);
+  
+  const {
+    formData,
+    authState,
+    uiState,
+    updateFormData,
+    updateAuthState,
+    updateUIState,
+    handleAuthentication,
+  } = useInvitationForm();
+
+  const handleDownload = async () => {
+    if (!formData.guestName || !formData.personalMessage || !formData.numberOfGuests) {
+      alert("Por favor completa todos los campos obligatorios antes de descargar");
+      return;
+    }
+
+    if (!uiState.showPreview) {
+      updateUIState({ showPreview: true });
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    if (!invitationRef.current) return;
+
+    await DownloadService.downloadInvitation(
+      invitationRef.current,
+      formData,
+      {
+        onStart: () => updateUIState({ isDownloading: true, downloadError: "" }),
+        onSuccess: () => updateUIState({ isDownloading: false }),
+        onError: (error: string) => updateUIState({ isDownloading: false, downloadError: error })
+      }
+    );
+  };
+
+  return (
+    <section className="py-16 px-4 relative overflow-hidden min-h-screen bg-gradient-to-br from-purple-100 via-fuchsia-100 to-white">
+      {/* Decoraciones de fondo */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute top-20 left-10 text-6xl text-purple-400">✨</div>
+        <div className="absolute top-40 right-20 text-5xl text-fuchsia-400">👑</div>
+        <div className="absolute bottom-40 left-20 text-4xl text-purple-400">💜</div>
+        <div className="absolute bottom-20 right-10 text-5xl text-fuchsia-400">🌟</div>
+      </div>
+
+      {/* Panel de autenticación */}
+      <div className="absolute top-4 right-4 z-50">
+        <AuthPanel
+          authState={authState}
+          onUpdateAuth={updateAuthState}
+          onAuthenticate={handleAuthentication}
+        />
+      </div>
+
+      <div className="max-w-4xl mx-auto mt-32 text-center relative z-10">
+        <h1 className="bg-gradient-to-r from-purple-700 via-fuchsia-500 to-purple-700 bg-clip-text text-transparent text-4xl md:text-5xl font-bold mb-6 drop-shadow-sm">
+          Invitaciones Personalizadas Quinceañera
+        </h1>
+        <p className="text-lg text-fuchsia-700 mb-8 max-w-2xl mx-auto">
+          Crea invitaciones mágicas y personalizadas para la fiesta de XV años, con mensajes especiales y envío directo por WhatsApp.
+        </p>
+        
+        {!authState.isAuthenticated && (
+          <div className="mt-12 p-6 bg-white/90 rounded-2xl border-2 border-fuchsia-200 shadow-lg max-w-xl mx-auto relative z-20">
+            <div className="text-fuchsia-500 font-semibold mb-4">🔐 Acceso Restringido</div>
+            <p className="text-gray-600 text-sm">Esta herramienta es exclusiva para la creación de invitaciones personalizadas. Accede como administrador para comenzar.</p>
+            <div className="mt-4 p-3 bg-fuchsia-50 rounded-lg">
+              <p className="text-xs text-fuchsia-600">💡 <strong>Tip:</strong> Haz clic en el ícono ⚙️ en la esquina superior derecha</p>
+            </div>
+          </div>
+        )}
+
+        {authState.isAuthenticated && (
+          <div className="max-w-4xl mx-auto mt-12 space-y-8">
+            {/* Formulario principal */}
+            <div className="bg-white/90 rounded-2xl p-8 border-2 border-fuchsia-200 shadow-lg relative z-20">
+              <h2 className="text-2xl font-bold text-fuchsia-700 mb-6">📝 Crear Invitación Personalizada</h2>
+              
+              <InvitationForm
+                formData={formData}
+                onUpdateFormData={updateFormData}
+              />
+
+              {/* Mensaje de error de descarga */}
+              {uiState.downloadError && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600">❌ Error: {uiState.downloadError}</p>
+                </div>
+              )}
+
+              <ActionButtons
+                formData={formData}
+                uiState={uiState}
+                onTogglePreview={() => updateUIState({ showPreview: !uiState.showPreview })}
+                onDownload={handleDownload}
+              />
+
+              {/* Instrucciones de descarga */}
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="text-sm font-semibold text-blue-800 mb-2">💡 Consejos para la descarga:</h4>
+                <ul className="text-xs text-blue-700 space-y-1">
+                  <li>• La imagen se descargará en formato PNG de alta calidad</li>
+                  <li>• Asegúrate de completar todos los campos obligatorios</li>
+                  <li>• La descarga puede tardar unos segundos en procesarse</li>
+                  <li>• El archivo se guardará con el nombre del invitado</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Vista previa */}
+            {uiState.showPreview && formData.guestName && formData.personalMessage && (
+              <InvitationPreview ref={invitationRef} formData={formData} />
+            )}
+
+            {/* Información adicional */}
+            <div className="bg-white/80 rounded-2xl p-6 border border-fuchsia-200 relative z-20">
+              <h3 className="text-lg font-bold text-fuchsia-700 mb-4">ℹ️ Información del Evento</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                <div>
+                  <p><strong>📅 Fecha:</strong> {EVENT_INFO.date}</p>
+                  <p><strong>🕖 Hora:</strong> {EVENT_INFO.time}</p>
+                </div>
+                <div>
+                  <p><strong>📍 Lugar:</strong> {EVENT_INFO.venue}</p>
+                  <p><strong>👗 Código de vestimenta:</strong> {EVENT_INFO.dressCode}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default CustomInvitations;

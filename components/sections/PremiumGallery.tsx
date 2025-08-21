@@ -67,7 +67,7 @@ export function PremiumGallery() {
   }, [currentIndex, isModalOpen, goToNext, goToPrevious, closeModal, isClient])
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-blue-50 to-sky-50">
+    <section className="py-16 px-4 bg-gradient-to-br from-rose-50 to-pink-50">
       <div
         ref={ref}
         className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${
@@ -76,14 +76,14 @@ export function PremiumGallery() {
       >
         {/* Header premium */}
         <div className="mb-12">
-          <div className="inline-block bg-gradient-to-r from-blue-400 to-sky-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg">
+          <div className="inline-block text-white px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg" style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}>
             📸 Galería
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#b87878' }}>
             {premiumDemoData.gallery.title}
           </h2>
-          <p className="text-xl text-blue-600 mb-2">
+          <p className="text-xl mb-2" style={{ color: '#c98888' }}>
             {premiumDemoData.gallery.subtitle}
           </p>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -93,7 +93,7 @@ export function PremiumGallery() {
 
         <div className="divider">
           <div className="divider-icon">
-            <Camera className="w-8 h-8 text-blue-500" />
+            <Camera className="w-8 h-8" style={{ color: '#e3aaaa' }} />
           </div>
         </div>
         <div>
@@ -143,7 +143,8 @@ export function PremiumGallery() {
             <>
               <button
                 onClick={goToPrevious}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-400 to-sky-500 text-white p-3 rounded-full shadow-md hover:from-blue-500 hover:to-sky-600 transition-all z-10"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-white p-3 rounded-full shadow-md transition-all z-10 hover:opacity-80"
+                style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}
                 aria-label="Imagen anterior"
               >
                 <ChevronLeft size={24} />
@@ -151,7 +152,8 @@ export function PremiumGallery() {
 
               <button
                 onClick={goToNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-400 to-sky-500 text-white p-3 rounded-full shadow-md hover:from-blue-500 hover:to-sky-600 transition-all z-10"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white p-3 rounded-full shadow-md transition-all z-10 hover:opacity-80"
+                style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}
                 aria-label="Siguiente imagen"
               >
                 <ChevronRight size={24} />
@@ -168,9 +170,10 @@ export function PremiumGallery() {
                   onClick={() => goToSlide(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     index === currentIndex 
-                      ? 'bg-blue-500 w-6' 
+                      ? 'w-6' 
                       : 'bg-white/70 hover:bg-white'
                   }`}
+                  style={index === currentIndex ? { backgroundColor: '#e3aaaa' } : {}}
                   aria-label={`Ir a imagen ${index + 1}`}
                 />
               ))}
@@ -187,7 +190,8 @@ export function PremiumGallery() {
           <div className="relative w-full max-w-5xl h-[80vh]">
             <button
               onClick={closeModal}
-              className="absolute right-2 top-2 bg-gradient-to-r from-blue-400 to-sky-500 text-white p-2 rounded-full z-20 hover:from-blue-500 hover:to-sky-600 transition-all"
+              className="absolute right-2 top-2 text-white p-2 rounded-full z-20 transition-all hover:opacity-80"
+              style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}
               aria-label="Cerrar modal"
             >
               <X size={24} />
@@ -209,7 +213,8 @@ export function PremiumGallery() {
 
             <button
               onClick={goToPrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-400 to-sky-500 text-white p-3 rounded-full shadow-md hover:from-blue-500 hover:to-sky-600 transition-all z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-white p-3 rounded-full shadow-md transition-all z-10 hover:opacity-80"
+              style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}
               aria-label="Imagen anterior"
             >
               <ChevronLeft size={30} />
@@ -217,7 +222,8 @@ export function PremiumGallery() {
 
             <button
               onClick={goToNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-400 to-sky-500 text-white p-3 rounded-full shadow-md hover:from-blue-500 hover:to-sky-600 transition-all z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white p-3 rounded-full shadow-md transition-all z-10 hover:opacity-80"
+              style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}
               aria-label="Siguiente imagen"
             >
               <ChevronRight size={30} />
@@ -229,8 +235,9 @@ export function PremiumGallery() {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentIndex ? 'bg-blue-500 w-6' : 'bg-white/50'
+                    index === currentIndex ? 'w-6' : 'bg-white/50'
                   }`}
+                  style={index === currentIndex ? { backgroundColor: '#e3aaaa' } : {}}
                   aria-label={`Ir a imagen ${index + 1}`}
                 />
               ))}

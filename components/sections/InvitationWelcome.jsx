@@ -20,7 +20,7 @@ export default function WelcomeMessage({ onContinue }) {
   return (
     <div 
     style={{
-      background: 'linear-gradient(135deg, #eaf4ff 0%, #d6ecff 35%, #c1e3ff 65%, #a9d7ff 100%)',
+      background: 'linear-gradient(135deg, #f7e6e6, #e3aaaa)',
         /* backgroundImage: `url('/images/fondo1.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
