@@ -86,7 +86,7 @@ export const weddingData = {
   // 🎁 Información de regalos
   gifts: {
     type: "Lluvia de sobres",
-    message: "Tu presencia es lo más importante, pero si deseas hacernos un obsequio te agradeceríamos que fuera en lluvia de sobre."
+    message: "Que estés conmigo está noche es lo más importante para nosotros, el obsequio que deses darme es de tu elección."
   },
 
   // 📸 Galería de imágenes
@@ -106,7 +106,7 @@ export const weddingData = {
 
   // 💬 Mensajes y frases
   messages: {
-    timelineQuote: "Hoy florecen mis sueños… cumplo XV años.",
+    timelineQuote: "Es momento de celebrar mis XV, los espero para compartir una noche de alegría y diversión.",
     dateMessage: "¡La cuenta regresiva ha comenzado!",
     countdownTitle: "TAN SÓLO FALTAN"
   },

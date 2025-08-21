@@ -22,16 +22,16 @@ import CustomInvitations from "@/components/sections/CustomInvitations/component
 
 export default function WeddingInvitation() {
   const [isOpenInvitation, setIsOpenInvitation] = useState(false);
-  const [isWelcomeMessageVisible, setIsWelcomeMessageVisible] = useState(false);
+  //const [isWelcomeMessageVisible, setIsWelcomeMessageVisible] = useState(false);
 
   const handleOpenInvitation = () => {
     setIsOpenInvitation(true);
-    setIsWelcomeMessageVisible(true);
+    //setIsWelcomeMessageVisible(true);
   };
 
-  const handleContinue = () => {
+  /* const handleContinue = () => {
     setIsWelcomeMessageVisible(false);
-  };
+  }; */
 
   if(!isOpenInvitation) {
     return (
@@ -39,9 +39,9 @@ export default function WeddingInvitation() {
     )
   }
 
-  if (isWelcomeMessageVisible) {
+  /* if (isWelcomeMessageVisible) {
     return <WelcomeMessage onContinue={handleContinue} />
-  }
+  } */
 
   
   // Color Palo de Rosa #e3aaaa

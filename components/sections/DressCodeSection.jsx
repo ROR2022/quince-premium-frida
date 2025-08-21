@@ -1,32 +1,31 @@
 // 👗 DressCodeSection - Sección de código de vestimenta y confirmación
 
-import React from 'react'
-import { Phone } from 'lucide-react'
-import { Button } from '../ui/button'
-import { Card, CardContent } from '../ui/card'
-import { weddingData } from '../../data/weddingData'
-import { useWhatsApp } from '../../hooks/useWhatsApp'
+import React from "react";
+import { Phone } from "lucide-react";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { weddingData } from "../../data/weddingData";
+import { useWhatsApp } from "../../hooks/useWhatsApp";
 //import { getOverlayStyle } from '@/utils/overlay'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
-import { getAnimationConfig } from '@/data/animationConfig'
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { getAnimationConfig } from "@/data/animationConfig";
 //import { PiCoatHanger } from "react-icons/pi";
 import { GiLargeDress } from "react-icons/gi";
 
-//import Image from 'next/image'
-
+import Image from "next/image";
 
 export default function DressCodeSection() {
-  const { dressCode, styling } = weddingData
-  const { confirmAttendance } = useWhatsApp()
-  const { dressCodeSection } = styling
+  const { dressCode, styling } = weddingData;
+  const { confirmAttendance } = useWhatsApp();
+  const { dressCodeSection } = styling;
 
   // Configurar animación de scroll
-  const animationConfig = getAnimationConfig('dressCode')
+  const animationConfig = getAnimationConfig("dressCode");
   const { ref: sectionRef, style: animationStyle } = useScrollAnimation(
     animationConfig.options,
     animationConfig.type,
     animationConfig.delay
-  )
+  );
 
   return (
     <section
@@ -34,13 +33,13 @@ export default function DressCodeSection() {
       id="dresscode"
       className="py-20"
       style={{
-         /* backgroundImage: `url('/images/campo1.png')`,
+        /* backgroundImage: `url('/images/campo1.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',  */
-        position: 'relative',
+        position: "relative",
         zIndex: 5000, // Asegurar que la sección esté por encima de otros elementos
-        ...animationStyle
+        ...animationStyle,
       }}
     >
       {/* Overlay configurable */}
@@ -49,24 +48,35 @@ export default function DressCodeSection() {
         className="absolute inset-0 z-0"
       ></div> */}
 
-
       <div
         style={{
-          animation: 'bounce1 2s ease 0s 1 normal forwards'
+          animation: "bounce1 2s ease 0s 1 normal forwards",
         }}
-        className="container bg-slate-300 bg-opacity-60 mx-auto px-4  p-6 rounded-2xl">
+        className="container bg-slate-300 bg-opacity-60 mx-auto px-4  p-6 rounded-2xl"
+      >
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="font-script text-4xl text-secondary">
             Código de Vestimenta
           </h2>
+          <div className="flex gap-4 justify-center items-center">
+            <div>
+              <Image
+                src="/images/icono_traje.png"
+                alt="Código de Vestimenta"
+                width={30}
+                height={50}
+                className="mx-auto rounded-lg"
+              />
+            </div>
 
-          <div className='flex justify-center'>
-            <GiLargeDress className='w-12 h-12 text-secondary' />
+            <div className="flex justify-center">
+              <GiLargeDress className="w-12 h-12 text-secondary" />
+            </div>
           </div>
-
-          <div 
-          style={{display:'none'}}
-          className="flex justify-center items-center gap-8 mb-8">
+          <div
+            style={{ display: "none" }}
+            className="flex justify-center items-center gap-8 mb-8"
+          >
             <div className="text-center">
               <div className="w-24 h-32 bg-black rounded-lg mb-4 mx-auto"></div>
               <p className="font-medium">Vestido</p>
@@ -79,7 +89,9 @@ export default function DressCodeSection() {
             </div>
           </div>
 
-          <h3 className="text-3xl font-bold text-foreground">{dressCode.type}</h3>
+          <h3 className="text-3xl font-bold text-foreground">
+            {dressCode.type}
+          </h3>
           <p className="text-lg text-muted-foreground">{dressCode.note}</p>
 
           <Card className="max-w-md mx-auto bg-primary/10 border-primary/20">
@@ -102,5 +114,5 @@ export default function DressCodeSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
