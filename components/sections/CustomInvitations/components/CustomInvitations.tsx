@@ -52,9 +52,12 @@ const CustomInvitations: React.FC = () => {
   };
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden min-h-screen bg-gradient-to-br from-purple-100 via-fuchsia-100 to-white">
+    <section 
+    className="py-16 px-4 relative overflow-hidden bg-gradient-to-br from-purple-100 via-fuchsia-100 to-white">
       {/* Decoraciones de fondo */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
+      <div 
+      style={{ display: "none" }}
+      className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute top-20 left-10 text-6xl text-purple-400">✨</div>
         <div className="absolute top-40 right-20 text-5xl text-fuchsia-400">👑</div>
         <div className="absolute bottom-40 left-20 text-4xl text-purple-400">💜</div>
@@ -71,7 +74,7 @@ const CustomInvitations: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto mt-32 text-center relative z-10">
-        <h1 className="bg-gradient-to-r from-purple-700 via-fuchsia-500 to-purple-700 bg-clip-text text-transparent text-4xl md:text-5xl font-bold mb-6 drop-shadow-sm">
+        {/* <h1 className="bg-gradient-to-r from-purple-700 via-fuchsia-500 to-purple-700 bg-clip-text text-transparent text-4xl md:text-5xl font-bold mb-6 drop-shadow-sm">
           Invitaciones Personalizadas Quinceañera
         </h1>
         <p className="text-lg text-fuchsia-700 mb-8 max-w-2xl mx-auto">
@@ -86,7 +89,7 @@ const CustomInvitations: React.FC = () => {
               <p className="text-xs text-fuchsia-600">💡 <strong>Tip:</strong> Haz clic en el ícono ⚙️ en la esquina superior derecha</p>
             </div>
           </div>
-        )}
+        )} */}
 
         {authState.isAuthenticated && (
           <div className="max-w-4xl mx-auto mt-12 space-y-8">
