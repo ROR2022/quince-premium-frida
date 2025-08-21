@@ -67,7 +67,7 @@ export default function TimelineSection() {
                   
                 >
                   <Image
-                    src="/images/frida5.jpg"
+                    src="/images/frida8.jpg"
                     alt="Celebración"
                     fill
                     className="object-cover"

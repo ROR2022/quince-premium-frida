@@ -7,20 +7,20 @@ export const weddingData = {
     initials: "Frida",
     quote: "Hoy comienza mi historia… un sueño que florece, un camino nuevo en cada paso, en cada ilusión, en cada latido.",
     mainImage: "/images/noviosEditado1.png",
-    sunsetImage: "/images/frida4.jpg"
+    sunsetImage: "/images/frida7.jpg"
   },
 
   // 👨‍👩‍👧‍👦 Información de los padres
   parents: {
     bride: {
-      mother: "Vanessa Corpus",
-      father: "Carlos Aranda"
+      mother: "Berenice Penélope García Sánchez",
+      father: "Jorge Valencia Andrade"
     },
     groom: {
       mother: "Karen Corpus",
       father: "Hugo Lizagarra"
     },
-    message: "A nuestros queridos padres: gracias por darnos la vida, cuidarnos, guiarnos y prepararnos para este momento tan especial. Su amor y apoyo son la base sobre la que construiremos nuestro hogar."
+    message: "A mis queridos padres: gracias por darme la vida, por cuidarme, guiarme y acompañarme hasta este día. Su amor y su ejemplo son el corazón de mis quince; con ustedes a mi lado, comienzo esta nueva etapa llena de ilusión y sueños."
   },
 
   // 📅 Información de fecha y evento
@@ -79,7 +79,7 @@ export const weddingData = {
   // 👗 Código de vestimenta
   dressCode: {
     type: "Formal",
-    note: "Se reserva el color blanco para la novia",
+    note: "Se reserva el color rosa para la quinceañera",
     confirmationMessage: "¡Quiero compartir este momento tan esperado contigo! Por favor ayúdanos confirmando tu asistencia"
   },
 

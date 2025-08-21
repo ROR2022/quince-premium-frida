@@ -13,13 +13,13 @@ export default function ParentsSection() {
         <div className="max-w-4xl mx-auto">
           <div className="relative">
             <Image
-              src="/images/floral-border.png"
+              src="/images/logoXV.png"
               alt="Decoración floral"
               fill
               className="opacity-20 object-cover"
               sizes="100vw"
             />
-            <div className="relative z-10 text-center space-y-8 py-12">
+            <div className="relative bg-slate-300 bg-opacity-60 p-6 rounded-2xl z-10 text-center space-y-8 py-12">
               <p className="text-lg text-muted-foreground italic max-w-2xl mx-auto leading-relaxed">
                 {parents.message}
               </p>
@@ -27,7 +27,7 @@ export default function ParentsSection() {
               <div className="space-y-8">
                 <div>
                   <h3 className="font-script text-3xl text-secondary mb-4">
-                    Papás de la novia
+                    Mis papás
                   </h3>
                   <div className="space-y-2">
                     <p className="text-xl font-medium">{parents.bride.mother}</p>
@@ -35,7 +35,7 @@ export default function ParentsSection() {
                   </div>
                 </div>
 
-                <div>
+                {/* <div>
                   <h3 className="font-script text-3xl text-secondary mb-4">
                     Papás del novio
                   </h3>
@@ -43,7 +43,8 @@ export default function ParentsSection() {
                     <p className="text-xl font-medium">{parents.groom.mother}</p>
                     <p className="text-xl font-medium">{parents.groom.father}</p>
                   </div>
-                </div>
+                </div> */}
+
               </div>
             </div>
           </div>

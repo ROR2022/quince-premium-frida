@@ -6,11 +6,13 @@ import { Button } from '../ui/button'
 import { Card, CardContent } from '../ui/card'
 import { weddingData } from '../../data/weddingData'
 import { useWhatsApp } from '../../hooks/useWhatsApp'
-import { getOverlayStyle } from '@/utils/overlay'
+//import { getOverlayStyle } from '@/utils/overlay'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { getAnimationConfig } from '@/data/animationConfig'
-import { PiCoatHanger } from "react-icons/pi";
-import Image from 'next/image'
+//import { PiCoatHanger } from "react-icons/pi";
+import { GiLargeDress } from "react-icons/gi";
+
+//import Image from 'next/image'
 
 
 export default function DressCodeSection() {
@@ -59,7 +61,7 @@ export default function DressCodeSection() {
           </h2>
 
           <div className='flex justify-center'>
-            <PiCoatHanger className='w-12 h-12 text-secondary' />
+            <GiLargeDress className='w-12 h-12 text-secondary' />
           </div>
 
           <div 

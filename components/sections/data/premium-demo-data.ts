@@ -84,36 +84,119 @@ export const premiumDemoData = {
     description: "Una colección de mis fotos favoritas preparándome para este gran día",
     images: [
       { 
-        src: "/images/frida1.jpg", 
+        src: "/images/frida9.jpg", 
         alt: "Sesión fotográfica 1", 
         caption: "Momentos Inolvidables",
         category: "preparacion"
       },
       { 
-        src: "/images/frida2.jpg", 
+        src: "/images/frida10.jpg", 
         alt: "Sesión fotográfica 2", 
         caption: "Momentos Inolvidables",
         category: "vestido"
       },
       { 
-        src: "/images/frida3.jpg", 
+        src: "/images/frida11.jpg", 
         alt: "Sesión fotográfica 3", 
         caption: "Momentos Inolvidables",
         category: "alegria"
       },
       { 
-        src: "/images/frida4.jpg", 
+        src: "/images/frida12.jpg", 
         alt: "Sesión fotográfica 4", 
         caption: "Momentos Inolvidables",
         category: "celebracion"
       },
       {
-        src: "/images/frida5.jpg",
+        src: "/images/frida13.jpg",
         alt: "Sesión fotográfica 5",
         caption: "Momentos Inolvidables",
         category: "celebracion"
       },
-      
+      {
+        src: "/images/frida14.jpg",
+        alt: "Sesión fotográfica 6",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida15.jpg",
+        alt: "Sesión fotográfica 7",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida16.jpg",
+        alt: "Sesión fotográfica 8",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida17.jpg",
+        alt: "Sesión fotográfica 9",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida18.jpg",
+        alt: "Sesión fotográfica 10",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida19.jpg",
+        alt: "Sesión fotográfica 11",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida1.jpg",
+        alt: "Sesión fotográfica 12",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida2.jpg",
+        alt: "Sesión fotográfica 13",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida3.jpg",
+        alt: "Sesión fotográfica 14",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida4.jpg",
+        alt: "Sesión fotográfica 15",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida5.jpg",
+        alt: "Sesión fotográfica 16",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida6.jpg",
+        alt: "Sesión fotográfica 17",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida7.jpg",
+        alt: "Sesión fotográfica 18",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      },
+      {
+        src: "/images/frida8.jpg",
+        alt: "Sesión fotográfica 19",
+        caption: "Momentos Inolvidables",
+        category: "celebracion"
+      }
     ]
   },
   

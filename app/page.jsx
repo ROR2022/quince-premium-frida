@@ -4,7 +4,7 @@ import { useState } from "react"
 
 //import Navigation from "../components/navigation"
 import HeroSection from "../components/sections/HeroSection"
-//import ParentsSection from "../components/sections/ParentsSection"
+import ParentsSection from "../components/sections/ParentsSection"
 import DateSection from "../components/sections/DateSection"
 import CeremonySection from "../components/sections/CeremonySection"
 import ReceptionSection from "../components/sections/ReceptionSection"
@@ -54,7 +54,7 @@ export default function WeddingInvitation() {
       {/* <Navigation /> */}
       {/* <DecorationElement /> */}
       <HeroSection />
-      {/* <ParentsSection /> */}
+       <ParentsSection />
       <DateSection />
       <CeremonySection />
       {/* <ReceptionSection /> */}
