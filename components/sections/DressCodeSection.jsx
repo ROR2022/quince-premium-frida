@@ -50,12 +50,13 @@ export default function DressCodeSection() {
 
       <div
         style={{
-          animation: "bounce1 2s ease 0s 1 normal forwards",
+          animation: "bounce1 2s ease 0s 1 infinite",
+          backgroundColor: "#C8BFE780",
         }}
-        className="container bg-slate-300 bg-opacity-60 mx-auto px-4  p-6 rounded-2xl"
+        className="container mx-auto px-4  p-6 rounded-2xl"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="font-script text-4xl text-secondary">
+          <h2 className="flip-2-hor-top-1 font-script text-4xl text-secondary">
             Código de Vestimenta
           </h2>
           <div className="flex gap-4 justify-center items-center">

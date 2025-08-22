@@ -16,6 +16,9 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
 }) => {
   const { isAuthenticated, showAuthPopover, password, showPassword, authError } = authState;
 
+  // Debug log
+  //console.log('AuthPanel render - showAuthPopover:', showAuthPopover);
+
   // Si está autenticado, mostrar badge de admin
   if (isAuthenticated) {
     return (
@@ -29,100 +32,235 @@ export const AuthPanel: React.FC<AuthPanelProps> = ({
   }
 
   return (
-    <div 
-    style={{
-      zIndex: 9000,
-    }}
-    className="relative">
-      {/* Botón de configuración */}
-      <button
-        onClick={() => onUpdateAuth({ showAuthPopover: !showAuthPopover })}
-        className={`p-2 ${CSS_CLASSES.GRADIENT_SECONDARY} hover:from-fuchsia-600 hover:to-purple-800 rounded-full shadow-lg transition-colors`}
-        title="Área de administración"
-        aria-label="Abrir panel de administración"
+    <>
+      {/* Botón de configuración - Fijo en esquina superior derecha */}
+      <div 
+        style={{
+          position: 'fixed',
+          bottom: '4rem',
+          left: '1rem',
+          zIndex: 999999,
+        }}
+        className=""
       >
-        <span role="img" aria-label="settings" className="text-white text-xl">⚙️</span>
-      </button>
+        <button
+          onClick={() => {
+            //console.log('Admin button clicked, current showAuthPopover:', showAuthPopover);
+            onUpdateAuth({ showAuthPopover: !showAuthPopover });
+          }}
+          className={`p-2 ${CSS_CLASSES.GRADIENT_SECONDARY} hover:from-fuchsia-600 hover:to-purple-800 rounded-full shadow-lg transition-colors`}
+          title="Área de administración"
+          aria-label="Abrir panel de administración"
+        >
+          <span role="img" aria-label="settings" className="text-white text-xl">
+            ⚙️</span>
+        </button>
+      </div>
 
-      {/* Popover de autenticación */}
+      {/* Modal de autenticación */}
       {showAuthPopover && (
-        <div className="absolute top-12 right-0 w-80 bg-white rounded-xl shadow-2xl border-2 border-fuchsia-200 p-4 z-50">
-          {/* Header del popover */}
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-fuchsia-700">Admin Panel</h3>
-            <button
-              onClick={() => onUpdateAuth({ showAuthPopover: false })}
-              className="p-1 hover:bg-gray-100 rounded text-fuchsia-600 transition-colors"
-              aria-label="Cerrar panel"
-            >
-              <span className="text-lg">✖️</span>
-            </button>
-          </div>
+        <div 
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2147483647,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}
+        >
+          {/* Overlay de fondo */}
+          <div
+            style={{ 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backdropFilter: 'blur(4px)',
+            }}
+            onClick={() => {
+              //console.log('Overlay clicked, closing modal');
+              onUpdateAuth({ showAuthPopover: false });
+            }}
+            aria-hidden="true"
+          />
 
-          {/* Formulario de autenticación */}
-          <form onSubmit={onAuthenticate} className="space-y-3">
-            {/* Campo de contraseña */}
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => onUpdateAuth({ password: e.target.value })}
-                placeholder="Contraseña"
-                className={`w-full px-3 text-black py-2 pr-10 border ${
-                  authError ? "border-red-300 focus:ring-red-400" : "border-fuchsia-200 focus:ring-fuchsia-400"
-                } rounded-lg text-sm focus:ring-2 focus:border-transparent transition-colors`}
-                required
-                autoComplete="current-password"
-              />
-              
-              {/* Botón para mostrar/ocultar contraseña */}
+          {/* Contenido del Modal */}
+          <div 
+            style={{ 
+              position: 'relative',
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              border: '2px solid #f0abfc',
+              padding: '24px',
+              width: '100%',
+              maxWidth: '28rem',
+              margin: '0 16px',
+              zIndex: 2147483647,
+            }}
+          >
+            {/* Header del modal */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+              <h3 style={{ fontWeight: 'bold', color: '#a21caf', fontSize: '18px', margin: 0 }}>Admin Panel</h3>
               <button
-                type="button"
-                onClick={() => onUpdateAuth({ showPassword: !showPassword })}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                onClick={() => {
+                  //console.log('Close button clicked');
+                  onUpdateAuth({ showAuthPopover: false });
+                }}
+                style={{ 
+                  padding: '4px', 
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  borderRadius: '4px',
+                  color: '#a21caf',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                aria-label="Cerrar panel"
               >
-                {showPassword ? "🙈" : "👁️"}
+                <span style={{ fontSize: '20px' }}>✖️</span>
               </button>
             </div>
 
-            {/* Mensaje de error */}
-            {authError && (
-              <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-xs text-red-600 flex items-center gap-1">
-                  <span>⚠️</span>
-                  {authError}
-                </p>
+            {/* Formulario de autenticación */}
+            <form onSubmit={onAuthenticate} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Campo de contraseña */}
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => onUpdateAuth({ password: e.target.value })}
+                  placeholder="Contraseña"
+                  style={{
+                    width: '100%',
+                    padding: '12px 40px 12px 12px',
+                    border: authError ? '1px solid #fca5a5' : '1px solid #f0abfc',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    color: 'black',
+                    outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = authError ? '#f87171' : '#c084fc';
+                    e.target.style.boxShadow = authError ? '0 0 0 2px rgba(248, 113, 113, 0.2)' : '0 0 0 2px rgba(192, 132, 252, 0.2)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = authError ? '#fca5a5' : '#f0abfc';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  required
+                  autoComplete="current-password"
+                  autoFocus
+                />
+                
+                {/* Botón para mostrar/ocultar contraseña */}
+                <button
+                  type="button"
+                  onClick={() => onUpdateAuth({ showPassword: !showPassword })}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: '#9ca3af',
+                    cursor: 'pointer',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#6b7280'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
               </div>
-            )}
 
-            {/* Botón de acceso */}
-            <button
-              type="submit"
-              className={`w-full ${CSS_CLASSES.GRADIENT_SECONDARY} hover:from-fuchsia-600 hover:to-purple-800 text-white py-2 rounded-lg font-bold transition-all shadow-md hover:shadow-lg`}
-              disabled={!password.trim()}
-            >
-              Acceder
-            </button>
-          </form>
+              {/* Mensaje de error */}
+              {authError && (
+                <div style={{ 
+                  padding: '12px', 
+                  backgroundColor: '#fef2f2', 
+                  border: '1px solid #fecaca', 
+                  borderRadius: '8px' 
+                }}>
+                  <p style={{ 
+                    fontSize: '14px', 
+                    color: '#dc2626', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    margin: 0 
+                  }}>
+                    <span>⚠️</span>
+                    {authError}
+                  </p>
+                </div>
+              )}
 
-          {/* Información adicional */}
-          <div className="mt-3 p-2 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-600 text-center">
-              🔒 Panel exclusivo para administradores
-            </p>
+              {/* Botón de acceso */}
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(to right, #c026d3, #9333ea)',
+                  color: 'white',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  cursor: password.trim() ? 'pointer' : 'not-allowed',
+                  opacity: password.trim() ? 1 : 0.6,
+                  transition: 'all 0.2s',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                }}
+                onMouseEnter={(e) => {
+                  if (password.trim()) {
+                    e.currentTarget.style.background = 'linear-gradient(to right, #a21caf, #7c3aed)';
+                    e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (password.trim()) {
+                    e.currentTarget.style.background = 'linear-gradient(to right, #c026d3, #9333ea)';
+                    e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                  }
+                }}
+                disabled={!password.trim()}
+              >
+                Acceder
+              </button>
+            </form>
+
+            {/* Información adicional */}
+            <div style={{ 
+              marginTop: '16px', 
+              padding: '12px', 
+              backgroundColor: '#f9fafb', 
+              borderRadius: '8px' 
+            }}>
+              <p style={{ 
+                fontSize: '12px', 
+                color: '#6b7280', 
+                textAlign: 'center',
+                margin: 0 
+              }}>
+                🔒 Panel exclusivo para administradores
+              </p>
+            </div>
           </div>
         </div>
       )}
-
-      {/* Overlay para cerrar el popover */}
-      {showAuthPopover && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => onUpdateAuth({ showAuthPopover: false })}
-          aria-hidden="true"
-        />
-      )}
-    </div>
+    </>
   );
 };

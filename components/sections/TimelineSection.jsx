@@ -63,7 +63,7 @@ export default function TimelineSection() {
                 
               >
                 <div 
-                  className="w-full h-full relative"
+                  className="rotate-scale-up w-full h-full relative"
                   
                 >
                   <Image
@@ -117,7 +117,11 @@ export default function TimelineSection() {
                 </div>
               ))}
 
-              <div className="text-center mt-8 p-6 bg-slate-300 bg-opacity-60 rounded-lg">
+              <div 
+              style={{
+                backgroundColor: "#C8BFE780",
+              }}
+              className=" text-center mt-8 p-6 bg-slate-300 bg-opacity-60 rounded-lg">
                 <p className="text-lg italic text-muted-foreground">
                   &ldquo;{messages.timelineQuote}&rdquo;
                 </p>

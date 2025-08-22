@@ -1,11 +1,11 @@
 // 👨‍👩‍👧‍👦 ParentsSection - Sección de información de padres
 
-import React from 'react'
-import Image from 'next/image'
-import { weddingData } from '../../data/weddingData'
+import React from "react";
+import Image from "next/image";
+import { weddingData } from "../../data/weddingData";
 
 export default function ParentsSection() {
-  const { parents } = weddingData
+  const { parents } = weddingData;
 
   return (
     <section id="parents" className="py-20 bg-muted/30">
@@ -19,19 +19,28 @@ export default function ParentsSection() {
               className="opacity-20 object-cover"
               sizes="100vw"
             />
-            <div className="relative bg-slate-300 bg-opacity-60 p-6 rounded-2xl z-10 text-center space-y-8 py-12">
+            <div
+              style={{
+                backgroundColor: "#C8BFE780",
+              }}
+              className="relative p-6 rounded-2xl z-10 text-center space-y-8 py-12"
+            >
               <p className="text-lg text-muted-foreground italic max-w-2xl mx-auto leading-relaxed">
                 {parents.message}
               </p>
 
               <div className="space-y-8">
                 <div>
-                  <h3 className="font-script text-3xl text-secondary mb-4">
+                  <h3 className="flip-2-hor-top-1 font-script text-3xl text-secondary mb-4">
                     Mis papás
                   </h3>
                   <div className="space-y-2">
-                    <p className="text-xl font-medium">{parents.bride.mother}</p>
-                    <p className="text-xl font-medium">{parents.bride.father}</p>
+                    <p className="text-xl font-medium">
+                      {parents.bride.mother}
+                    </p>
+                    <p className="text-xl font-medium">
+                      {parents.bride.father}
+                    </p>
                   </div>
                 </div>
 
@@ -44,12 +53,11 @@ export default function ParentsSection() {
                     <p className="text-xl font-medium">{parents.groom.father}</p>
                   </div>
                 </div> */}
-
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

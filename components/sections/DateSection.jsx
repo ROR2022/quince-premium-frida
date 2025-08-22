@@ -39,12 +39,17 @@ export default function DateSection() {
        {/* <div 
         style={getOverlayStyle(dateSection)}
         className="absolute inset-0 z-0"
-      ></div>  */}
+      ></div>  
+      style={{
+                backgroundColor: "#C8BFE780",
+              }}
+      */}
 
       <div 
         style={{
           // Remover animación CSS duplicada, usar solo scroll animation
-          willChange: 'transform, opacity' // Optimización para móviles
+          willChange: 'transform, opacity', // Optimización para móviles
+          backgroundColor: "#C8BFE780",
         }}
         className="container bg-slate-300 bg-opacity-60 rounded-b-2xl p-6 mx-auto px-4  p-6 rounded-2xl"
       >
@@ -72,7 +77,7 @@ export default function DateSection() {
                   height={100}
                 />
               </div>
-            <div className="text-8xl font-bold text-primary mb-2">
+            <div className="rotate-scale-up text-8xl font-bold text-primary mb-2">
               {wedding.day}
             </div>
             <div

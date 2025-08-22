@@ -41,11 +41,13 @@ export default function GiftsSection() {
       
       <div
       style={{
-        animation: 'bounce1 2s ease 0s 1 normal forwards'
+        animation: 'bounce1 2s ease 0s 1 normal forwards',
+        backgroundColor: "#C8BFE780",
       }}
        className="container bg-slate-300 bg-opacity-60 mx-auto px-4  p-6 rounded-2xl">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="font-script text-4xl text-secondary">Regalo</h2>
+          <h2 className="scale-up-center font-script text-4xl text-secondary">
+            Regalo</h2>
 
           <div className="bg-muted/50 rounded-2xl p-8 max-w-md mx-auto">
             <Gift className="w-16 h-16 text-secondary mx-auto mb-4" />

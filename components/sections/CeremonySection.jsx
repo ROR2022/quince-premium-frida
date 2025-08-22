@@ -51,6 +51,7 @@ export default function CeremonySection() {
           willChange: "transform, opacity", // Optimización para móviles
           position: "relative",
           zIndex: 4000,
+          backgroundColor: "#C8BFE780",
         }}
         className="container bg-slate-300 bg-opacity-60 mx-auto px-4  p-6 rounded-2xl"
       >
@@ -100,10 +101,10 @@ export default function CeremonySection() {
                   }}
                   className="space-y-4"
                 >
-                   <div className="text-8xl text-secondary font-script mb-4">
-            {couple.initials}
+                   <div className="text-4xl text-secondary font-script mb-4">
+            Ceremonia y Recepción
           </div>
-                  <h4 className="text-2xl font-bold text-foreground">
+                  <h4 className="scale-up-center text-2xl font-bold text-foreground">
                     {ceremony.name}
                   </h4>
                   <div className="flex items-center justify-center gap-2">

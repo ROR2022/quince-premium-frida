@@ -67,7 +67,11 @@ export function PremiumGallery() {
   }, [currentIndex, isModalOpen, goToNext, goToPrevious, closeModal, isClient])
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-rose-50 to-pink-50">
+    <section 
+    style={{
+      backgroundColor: "#C8BFE780",
+    }}
+    className="py-16 px-4">
       <div
         ref={ref}
         className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${
@@ -80,8 +84,8 @@ export function PremiumGallery() {
             📸 Galería
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#b87878' }}>
-            {premiumDemoData.gallery.title}
+          <h2 className="rotate-scale-up text-3xl md:text-4xl font-bold mb-4" style={{ color: '#b87878' }}>
+            {premiumDemoData.gallery.title} 
           </h2>
           <p className="text-xl mb-2" style={{ color: '#c98888' }}>
             {premiumDemoData.gallery.subtitle}

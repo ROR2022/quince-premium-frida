@@ -5,7 +5,7 @@ export const weddingData = {
     bride: "",
     groom: "",
     initials: "Frida",
-    quote: "Hoy comienza mi historia… un sueño que florece, un camino nuevo en cada paso, en cada ilusión, en cada latido.",
+    quote: "",
     mainImage: "/images/noviosEditado1.png",
     sunsetImage: "/images/frida7.jpg"
   },
@@ -20,7 +20,7 @@ export const weddingData = {
       mother: "Karen Corpus",
       father: "Hugo Lizagarra"
     },
-    message: "A mis queridos padres: gracias por darme la vida, por cuidarme, guiarme y acompañarme hasta este día. Su amor y su ejemplo son el corazón de mis quince; con ustedes a mi lado, comienzo esta nueva etapa llena de ilusión y sueños."
+    message: "A mis queridos padres: Gracias por darme la vida, por cuidarme, guiarme y acompañarme hasta este día tan especial. Su amor incondicional y su ejemplo han sido los pilares fundamentales de mi crecimiento. En mis quince años, ustedes han sido mi fortaleza y mi inspiración. Con ustedes a mi lado, comienzo esta nueva etapa de mi vida llena de ilusión, sueños y esperanzas. Su presencia hace que este momento sea aún más significativo y emotivo. Los amo profundamente."
   },
 
   // 📅 Información de fecha y evento
@@ -61,19 +61,20 @@ export const weddingData = {
       color: "primary"
     },
     {
+      id: "cena",
+      name: "Cena",
+      time: "8:00",
+      icon: "🍽️", // Plato con cubiertos - cena elegante
+      color: "primary"
+    },
+    {
       id: "brindis",
       name: "Brindis",
-      time: "8:00",
+      time: "9:45",
       icon: "🥂", // Copas de champagne - celebración y brindis
       color: "secondary"
     },
-    {
-      id: "cena",
-      name: "Cena",
-      time: "9:00",
-      icon: "🍽️", // Plato con cubiertos - cena elegante
-      color: "primary"
-    }
+    
   ],
 
   // 👗 Código de vestimenta

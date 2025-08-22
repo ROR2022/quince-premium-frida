@@ -44,10 +44,12 @@ export default function HeroSection() {
       
       {/* Contenido principal - Usar solo animación CSS, no scroll-based */}
       <div 
-       
-        className="bg-slate-300 bg-opacity-60 p-6 rounded-2xl relative z-10 text-center space-y-6 px-4"
+       style={{
+        backgroundColor:'#C8BFE780'
+       }}
+        className=" bg-opacity-60 p-6 rounded-2xl relative z-10 text-center space-y-6 px-4"
       >
-        <h1 className="font-script text-6xl md:text-8xl text-foreground mb-4">
+        <h1 className="font-script text-6xl md:text-8xl text-foreground mb-4 scale-up-center">
           {wedding.title.split(' ').map((word, index) => (
             <span key={index}>
               {index === 1 ? <span className="italic">{word}</span> : word}
