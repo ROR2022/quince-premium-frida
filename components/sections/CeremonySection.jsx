@@ -1,6 +1,6 @@
 // ⛪ CeremonySection - Sección de información de la ceremonia
 
-import React from "react";
+import React, {useState,useEffect} from "react";
 import Image from "next/image";
 import { MapPin, Clock } from "lucide-react";
 import { Button } from "../ui/button";
@@ -14,6 +14,32 @@ export default function CeremonySection() {
   const { ceremony, couple, styling } = weddingData;
   const { goToCeremony } = useMapNavigation();
   const { ceremonySection } = styling;
+
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+        const [isVisible, setIsVisible] = useState(false);
+        
+      
+        const basicClass="text-2xl font-bold text-foreground";
+        const completeClass="text-2xl font-bold text-foreground scale-up-center";
+      
+        useEffect(() => {
+          const handleScroll = () => {
+            //console.log('Scroll position:', window.scrollY);
+            setScrollPosition(window.scrollY);
+          };
+      
+          window.addEventListener('scroll', handleScroll);
+          return () => {
+            window.removeEventListener('scroll', handleScroll);
+          };
+        }, []);
+      
+        useEffect(() => {
+          if(scrollPosition >= 2300 && scrollPosition < 2900) {
+            setIsVisible(true);
+          }
+        },[scrollPosition])
+    
 
   // Configurar animación de scroll
   const animationConfig = getAnimationConfig("ceremony");
@@ -104,7 +130,7 @@ export default function CeremonySection() {
                    <div className="text-4xl text-secondary font-script mb-4">
             Ceremonia y Recepción
           </div>
-                  <h4 className="scale-up-center text-2xl font-bold text-foreground">
+                  <h4 className={isVisible ? completeClass : basicClass}>
                     {ceremony.name}
                   </h4>
                   <div className="flex items-center justify-center gap-2">

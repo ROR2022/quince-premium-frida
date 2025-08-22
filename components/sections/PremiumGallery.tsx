@@ -16,6 +16,32 @@ export function PremiumGallery() {
 
   const images = premiumDemoData.gallery.images
 
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+    const [isVisible, setIsVisible] = useState(false);
+  
+    const basicClass = "text-3xl md:text-4xl font-bold mb-4";
+    const completeClass = "text-3xl md:text-4xl font-bold mb-4 scale-up-center";
+  
+    useEffect(() => {
+      const handleScroll = () => {
+        //console.log("Scroll position:", window.scrollY);
+        setScrollPosition(window.scrollY);
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+  
+    useEffect(() => {
+      if (scrollPosition >= 5400 && scrollPosition < 6000) {
+        setIsVisible(true);
+      }
+    }, [scrollPosition]);
+  
+
+
   const goToPrevious = useCallback(() => {
     if (!isClient) return
     const isFirstSlide = currentIndex === 0
@@ -83,9 +109,9 @@ export function PremiumGallery() {
           <div className="inline-block text-white px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg" style={{ background: 'linear-gradient(to right, #e3aaaa, #d49999)' }}>
             📸 Galería
           </div>
-          
-          <h2 className="rotate-scale-up text-3xl md:text-4xl font-bold mb-4" style={{ color: '#b87878' }}>
-            {premiumDemoData.gallery.title} 
+
+          <h2 className={isVisible ? completeClass : basicClass} style={{ color: '#b87878' }}>
+            {premiumDemoData.gallery.title}
           </h2>
           <p className="text-xl mb-2" style={{ color: '#c98888' }}>
             {premiumDemoData.gallery.subtitle}

@@ -1,11 +1,36 @@
 // 👨‍👩‍👧‍👦 ParentsSection - Sección de información de padres
 
-import React from "react";
+import React, {useState,useEffect} from "react";
 import Image from "next/image";
 import { weddingData } from "../../data/weddingData";
 
 export default function ParentsSection() {
   const { parents } = weddingData;
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+    const [isVisible, setIsVisible] = useState(false);
+    
+  
+    const basicClass="font-script text-3xl text-secondary mb-4";
+    const completeClass="font-script text-3xl text-secondary mb-4 scale-up-center";
+  
+    useEffect(() => {
+      const handleScroll = () => {
+        //console.log('Scroll position:', window.scrollY);
+        setScrollPosition(window.scrollY);
+      };
+  
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+  
+    useEffect(() => {
+      if(scrollPosition >= 600 && scrollPosition < 1200) {
+        setIsVisible(true);
+      }
+    },[scrollPosition])
+  
 
   return (
     <section id="parents" className="py-20 bg-muted/30">
@@ -31,7 +56,7 @@ export default function ParentsSection() {
 
               <div className="space-y-8">
                 <div>
-                  <h3 className="flip-2-hor-top-1 font-script text-3xl text-secondary mb-4">
+                  <h3 className={isVisible ? completeClass : basicClass}>
                     Mis papás
                   </h3>
                   <div className="space-y-2">

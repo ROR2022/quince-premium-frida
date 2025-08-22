@@ -456,7 +456,7 @@
 }
 
 .scale-up-center {
-	animation: scale-up-center 4s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite alternate;
+	animation: scale-up-center 4s cubic-bezier(0.390, 0.575, 0.565, 1.000) alternate;
 }
 
 @keyframes scale-up-center {

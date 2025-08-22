@@ -1,6 +1,6 @@
 // 📅 DateSection - Sección de fecha y countdown
 
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import CountdownTimer from '../countdown-timer'
 import { weddingData } from '../../data/weddingData'
 import { getOverlayStyle } from '@/utils/overlay'
@@ -11,6 +11,31 @@ import Image from 'next/image'
 export default function DateSection() {
   const { wedding, messages, styling } = weddingData
   const { dateSection } = styling
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+      const [isVisible, setIsVisible] = useState(false);
+      
+    
+      const basicClass="text-8xl font-bold text-primary mb-2";
+      const completeClass="text-8xl font-bold text-primary mb-2 scale-up-center";
+    
+      useEffect(() => {
+        const handleScroll = () => {
+          //console.log('Scroll position:', window.scrollY);
+          setScrollPosition(window.scrollY);
+        };
+    
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, []);
+    
+      useEffect(() => {
+        if(scrollPosition >= 1200 && scrollPosition < 2000) {
+          setIsVisible(true);
+        }
+      },[scrollPosition])
+    
 
   // Configurar animación de scroll con fallback de carga inmediata
   const animationConfig = getAnimationConfig('date')
@@ -51,7 +76,7 @@ export default function DateSection() {
           willChange: 'transform, opacity', // Optimización para móviles
           backgroundColor: "#C8BFE780",
         }}
-        className="container bg-slate-300 bg-opacity-60 rounded-b-2xl p-6 mx-auto px-4  p-6 rounded-2xl"
+        className="container bg-slate-300 bg-opacity-60 rounded-b-2xl mx-auto px-4  p-6 rounded-2xl"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <p className="text-lg text-muted-foreground italic">
@@ -77,7 +102,7 @@ export default function DateSection() {
                   height={100}
                 />
               </div>
-            <div className="rotate-scale-up text-8xl font-bold text-primary mb-2">
+            <div className={isVisible ? completeClass : basicClass}>
               {wedding.day}
             </div>
             <div

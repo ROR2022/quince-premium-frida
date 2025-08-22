@@ -1,6 +1,6 @@
 // 🏠 HeroSection - Sección principal/portada
 
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Image from 'next/image'
 import { Heart } from 'lucide-react'
 import { weddingData } from '../../data/weddingData'
@@ -10,8 +10,34 @@ import { getAnimationConfig } from '@/data/animationConfig'
 
 export default function HeroSection() {
   const { couple, wedding, styling } = weddingData
-  const { heroSection } = styling
+  //const { heroSection } = styling
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+  const [isVisible, setIsVisible] = useState(false);
   
+
+  const basicClass="font-script text-6xl md:text-8xl text-foreground mb-4";
+  const completeClass="font-script text-6xl md:text-8xl text-foreground mb-4 scale-up-center";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      //console.log('Scroll position:', window.scrollY);
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if(scrollPosition >= 0&& scrollPosition < 300) {
+      setIsVisible(true);
+    }
+  },[scrollPosition])
+
+  
+
   // Solo usar animación de background para el Hero, no scroll animations
   //const animationConfig = getAnimationConfig('reception')
   //const { ref: sectionRef, style: animationStyle } = useScrollAnimation(
@@ -49,7 +75,7 @@ export default function HeroSection() {
        }}
         className=" bg-opacity-60 p-6 rounded-2xl relative z-10 text-center space-y-6 px-4"
       >
-        <h1 className="font-script text-6xl md:text-8xl text-foreground mb-4 scale-up-center">
+        <h1 className={isVisible ? completeClass : basicClass}>
           {wedding.title.split(' ').map((word, index) => (
             <span key={index}>
               {index === 1 ? <span className="italic">{word}</span> : word}

@@ -1,6 +1,6 @@
 // ⏰ TimelineSection - Sección de cronograma del evento
 
-import React from 'react'
+import React, {useState,useEffect} from 'react'
 import Image from 'next/image'
 import { weddingData } from '../../data/weddingData'
 import { getOverlayStyle } from '@/utils/overlay'
@@ -10,6 +10,32 @@ import { getAnimationConfig } from '@/data/animationConfig'
 export default function TimelineSection() {
   const { timeline, messages, styling } = weddingData
   const { timelineSection } = styling
+
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+          const [isVisible, setIsVisible] = useState(false);
+          
+        
+          const basicClass="w-full h-full relative";
+          const completeClass="w-full h-full relative scale-up-center";
+
+          useEffect(() => {
+            const handleScroll = () => {
+              //console.log('Scroll position:', window.scrollY);
+              setScrollPosition(window.scrollY);
+            };
+        
+            window.addEventListener('scroll', handleScroll);
+            return () => {
+              window.removeEventListener('scroll', handleScroll);
+            };
+          }, []);
+        
+          useEffect(() => {
+            if(scrollPosition >= 2900 && scrollPosition < 3500) {
+              setIsVisible(true);
+            }
+          },[scrollPosition])
+    
 
   // Configurar animación de scroll
   const animationConfig = getAnimationConfig('timeline')
@@ -63,8 +89,7 @@ export default function TimelineSection() {
                 
               >
                 <div 
-                  className="rotate-scale-up w-full h-full relative"
-                  
+                  className={isVisible ? completeClass : basicClass}
                 >
                   <Image
                     src="/images/frida8.jpg"

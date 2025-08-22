@@ -1,6 +1,6 @@
 // 👗 DressCodeSection - Sección de código de vestimenta y confirmación
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
@@ -18,6 +18,32 @@ export default function DressCodeSection() {
   const { dressCode, styling } = weddingData;
   const { confirmAttendance } = useWhatsApp();
   const { dressCodeSection } = styling;
+
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+            const [isVisible, setIsVisible] = useState(false);
+            
+          
+            const basicClass="font-script text-4xl text-secondary";
+            const completeClass="font-script text-4xl text-secondary scale-up-center";
+  
+            useEffect(() => {
+              const handleScroll = () => {
+                //console.log('Scroll position:', window.scrollY);
+                setScrollPosition(window.scrollY);
+              };
+          
+              window.addEventListener('scroll', handleScroll);
+              return () => {
+                window.removeEventListener('scroll', handleScroll);
+              };
+            }, []);
+          
+            useEffect(() => {
+              if(scrollPosition >= 3900 && scrollPosition < 4700) {
+                setIsVisible(true);
+              }
+            },[scrollPosition])
+    
 
   // Configurar animación de scroll
   const animationConfig = getAnimationConfig("dressCode");
@@ -56,7 +82,7 @@ export default function DressCodeSection() {
         className="container mx-auto px-4  p-6 rounded-2xl"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="flip-2-hor-top-1 font-script text-4xl text-secondary">
+          <h2 className={isVisible ? completeClass : basicClass}>
             Código de Vestimenta
           </h2>
           <div className="flex gap-4 justify-center items-center">
