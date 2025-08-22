@@ -25,7 +25,7 @@ export const InvitationPreview = forwardRef<HTMLDivElement, InvitationPreviewPro
         </div>
         
         <div className="relative z-10 text-center">
-          <h2 className="text-2xl font-bold mb-4 text-yellow-200">✨ Quinceañera Aurora ✨</h2>
+          <h2 className="text-2xl font-bold mb-4 text-yellow-200">✨ Quinceañera Frida ✨</h2>
           <div className="space-y-3 text-lg">
             <p><strong>Invitado especial:</strong> {formData.guestName}</p>
             <p className="italic bg-white/20 p-3 rounded-lg">&quot;{formData.personalMessage}&quot;</p>
@@ -37,7 +37,7 @@ export const InvitationPreview = forwardRef<HTMLDivElement, InvitationPreviewPro
             </div>
           </div>
           <div className="mt-4 p-3 bg-white/20 rounded-lg">
-            <p className="text-sm">💜 Con cariño, Aurora</p>
+            <p className="text-sm">💜 Con cariño, Frida</p>
           </div>
         </div>
       </div>
