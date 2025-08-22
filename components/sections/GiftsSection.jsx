@@ -76,7 +76,9 @@ export default function GiftsSection() {
 
           <div className="bg-muted/50 rounded-2xl p-8 max-w-md mx-auto">
             <Gift className="w-16 h-16 text-secondary mx-auto mb-4" />
-            <h3 className="font-script text-3xl text-foreground mb-4">
+            <h3 
+            style={{display:'none'}}
+            className="font-script text-3xl text-foreground mb-4">
               {gifts.type}
             </h3>
             <p className="text-muted-foreground">{gifts.message}</p>
