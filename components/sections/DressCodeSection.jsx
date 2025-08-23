@@ -80,7 +80,7 @@ export default function DressCodeSection() {
         Hora: ${eventInfo.ceremonyTime}
         Ubicación: ${eventInfo.locationCeremony}`;
     // se envia el mensaje via WhatsApp
-    const whatsappUrl = `https://wa.me/1${confirmationNumber}?text=${encodeURIComponent(
+    const whatsappUrl = `https://wa.me/521${confirmationNumber}?text=${encodeURIComponent(
       message
     )}`;
     window.open(whatsappUrl, "_blank");
@@ -94,7 +94,7 @@ export default function DressCodeSection() {
         Hora: ${eventInfo.ceremonyTime}
         Ubicación: ${eventInfo.locationCeremony}`;
     // se envia el mensaje via WhatsApp
-    const whatsappUrl = `https://wa.me/1${confirmationNumber}?text=${encodeURIComponent(
+    const whatsappUrl = `https://wa.me/521${confirmationNumber}?text=${encodeURIComponent(
       message
     )}`;
     window.open(whatsappUrl, "_blank");
