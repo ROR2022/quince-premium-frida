@@ -34,7 +34,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     const message = generateWhatsAppMessage(formData);
     const cleanNumber = formData.whatsappNumber.replace(/\D/g, "");
     const mexicanNumber = `${cleanNumber}`;
-    const whatsappURL = `https://wa.me/1${mexicanNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappURL = `https://wa.me/521${mexicanNumber}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappURL, "_blank");
   };
