@@ -2,7 +2,7 @@
 
 "use client"
 
-import { Play, Pause, Volume2, RotateCcw } from 'lucide-react'
+import { Play, Pause, RotateCcw } from 'lucide-react'
 import { useAudioPlayer } from '@/hooks/useAudioPlayer'
 import { weddingData } from '@/data/weddingData'
 

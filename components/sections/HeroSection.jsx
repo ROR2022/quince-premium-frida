@@ -1,15 +1,15 @@
 // 🏠 HeroSection - Sección principal/portada
 
 import React, {useEffect, useState} from 'react'
-import Image from 'next/image'
+//import Image from 'next/image'
 import { Heart } from 'lucide-react'
 import { weddingData } from '../../data/weddingData'
-import { getOverlayStyle } from '@/utils/overlay'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
-import { getAnimationConfig } from '@/data/animationConfig'
+//import { getOverlayStyle } from '@/utils/overlay'
+//import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+//import { getAnimationConfig } from '@/data/animationConfig'
 
 export default function HeroSection() {
-  const { couple, wedding, styling } = weddingData
+  const { couple, wedding } = weddingData
   //const { heroSection } = styling
   const [scrollPosition, setScrollPosition] = useState(window.scrollY);
   const [isVisible, setIsVisible] = useState(false);

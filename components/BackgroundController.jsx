@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 export default function BackgroundController({ onStyleChange, initialStyle }) {
   const [opacity, setOpacity] = useState(initialStyle?.overlayOpacity || 0.3)
   const [overlayType, setOverlayType] = useState(initialStyle?.overlayType || 'gradient-radial')
-  const [overlayColor, setOverlayColor] = useState('#ffffff')
+  //const [overlayColor, setOverlayColor] = useState('#ffffff')
 
   const handleOpacityChange = (newOpacity) => {
     setOpacity(newOpacity)

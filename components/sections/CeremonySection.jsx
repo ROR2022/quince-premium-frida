@@ -5,15 +5,15 @@ import Image from "next/image";
 import { MapPin, Clock } from "lucide-react";
 import { Button } from "../ui/button";
 import { weddingData } from "../../data/weddingData";
-import { useMapNavigation } from "../../hooks/useMapNavigation";
-import { getOverlayStyle } from "@/utils/overlay";
+//import { useMapNavigation } from "../../hooks/useMapNavigation";
+//import { getOverlayStyle } from "@/utils/overlay";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getAnimationConfig } from "@/data/animationConfig";
 
 export default function CeremonySection() {
-  const { ceremony, couple, styling } = weddingData;
-  const { goToCeremony } = useMapNavigation();
-  const { ceremonySection } = styling;
+  const { ceremony, couple } = weddingData;
+  //const { goToCeremony } = useMapNavigation();
+  //const { ceremonySection } = styling;
 
   const [scrollPosition, setScrollPosition] = useState(window.scrollY);
         const [isVisible, setIsVisible] = useState(false);

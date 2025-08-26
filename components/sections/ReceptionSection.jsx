@@ -4,14 +4,14 @@ import React from 'react'
 import { MapPin, Clock } from 'lucide-react'
 import { Button } from '../ui/button'
 import { weddingData } from '../../data/weddingData'
-import { useMapNavigation } from '../../hooks/useMapNavigation'
+//import { useMapNavigation } from '../../hooks/useMapNavigation'
 import { getOverlayStyle } from '@/utils/overlay'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { getAnimationConfig } from '@/data/animationConfig'
 
 export default function ReceptionSection() {
   const { reception, couple, styling } = weddingData
-  const { goToReception } = useMapNavigation()
+  //const { goToReception } = useMapNavigation()
   const { receptionSection } = styling
 
   // Configurar animación de scroll

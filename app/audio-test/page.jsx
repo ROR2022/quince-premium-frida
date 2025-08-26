@@ -55,7 +55,7 @@ export default function AudioDiagnostic() {
       audio.addEventListener('canplaythrough', () => setStatus('Puede reproducir completamente'))
       
       // Eventos de error
-      audio.addEventListener('error', (e) => {
+      audio.addEventListener('error', () => {
         const error = audio.error
         setError({
           code: error?.code,

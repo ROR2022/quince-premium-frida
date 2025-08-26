@@ -7,7 +7,7 @@ import { weddingData } from '../../data/weddingData'
 import { useWhatsApp } from '../../hooks/useWhatsApp'
 
 export default function GallerySection() {
-  const { gallery, agency, couple } = weddingData
+  const { gallery, agency } = weddingData
   const { contactAgency } = useWhatsApp()
 
   return (

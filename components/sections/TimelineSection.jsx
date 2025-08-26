@@ -3,13 +3,13 @@
 import React, {useState,useEffect} from 'react'
 import Image from 'next/image'
 import { weddingData } from '../../data/weddingData'
-import { getOverlayStyle } from '@/utils/overlay'
+//import { getOverlayStyle } from '@/utils/overlay'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { getAnimationConfig } from '@/data/animationConfig'
 
 export default function TimelineSection() {
-  const { timeline, messages, styling } = weddingData
-  const { timelineSection } = styling
+  const { timeline, messages } = weddingData
+  //const { timelineSection } = styling
 
   const [scrollPosition, setScrollPosition] = useState(window.scrollY);
           const [isVisible, setIsVisible] = useState(false);

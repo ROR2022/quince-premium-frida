@@ -5,7 +5,7 @@ import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { weddingData } from "../../data/weddingData";
-import { useWhatsApp } from "../../hooks/useWhatsApp";
+//import { useWhatsApp } from "../../hooks/useWhatsApp";
 //import { getOverlayStyle } from '@/utils/overlay'
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getAnimationConfig } from "@/data/animationConfig";
@@ -15,9 +15,9 @@ import { GiLargeDress } from "react-icons/gi";
 import Image from "next/image";
 
 export default function DressCodeSection() {
-  const { dressCode, styling, wedding } = weddingData;
-  const { confirmAttendance } = useWhatsApp();
-  const { dressCodeSection } = styling;
+  const { dressCode } = weddingData;
+  //const { confirmAttendance } = useWhatsApp();
+  //const { dressCodeSection } = styling;
 
   const [scrollPosition, setScrollPosition] = useState(window.scrollY);
   const [isVisible, setIsVisible] = useState(false);

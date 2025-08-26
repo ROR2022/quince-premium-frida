@@ -3,14 +3,14 @@
 import React, {useState, useEffect} from 'react'
 import CountdownTimer from '../countdown-timer'
 import { weddingData } from '../../data/weddingData'
-import { getOverlayStyle } from '@/utils/overlay'
+//import { getOverlayStyle } from '@/utils/overlay'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { getAnimationConfig } from '@/data/animationConfig'
 import Image from 'next/image'
 
 export default function DateSection() {
-  const { wedding, messages, styling } = weddingData
-  const { dateSection } = styling
+  const { wedding, messages } = weddingData
+  //const { dateSection } = styling
   const [scrollPosition, setScrollPosition] = useState(window.scrollY);
       const [isVisible, setIsVisible] = useState(false);
       
@@ -39,7 +39,7 @@ export default function DateSection() {
 
   // Configurar animación de scroll con fallback de carga inmediata
   const animationConfig = getAnimationConfig('date')
-  const { ref: sectionRef, style: animationStyle } = useScrollAnimation(
+  const { ref: sectionRef } = useScrollAnimation(
     animationConfig.options,
     'fadeIn', // Animación más suave
     animationConfig.delay,

@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { Gift } from "lucide-react";
 import { weddingData } from "../../data/weddingData";
-import { getOverlayStyle } from "@/utils/overlay";
+//import { getOverlayStyle } from "@/utils/overlay";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { getAnimationConfig } from "@/data/animationConfig";
-import Image from "next/image";
+//import Image from "next/image";
 
 export default function GiftsSection() {
-  const { gifts, styling } = weddingData;
-  const { giftsSection } = styling;
+  const { gifts } = weddingData;
+  //const { giftsSection } = styling;
 
   const [scrollPosition, setScrollPosition] = useState(window.scrollY);
   const [isVisible, setIsVisible] = useState(false);
