@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Camera, Users, Calendar, RefreshCw, Filter, ChevronLeft, ChevronRight, Loader2, AlertCircle, Heart, Cloud, Server, Trash2, X, Image as ImageIcon, ArrowUp, Grid3X3, Play } from 'lucide-react';
+import { Camera, Users, Calendar, RefreshCw, Filter, ChevronLeft, ChevronRight, Loader2, AlertCircle, Heart, Cloud, Server, Trash2, Image as ImageIcon, ArrowUp, Grid3X3, Play } from 'lucide-react';
 import { useHybridGallery } from './hooks/useHybridGallery';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import PhotoDetailModal from './PhotoDetailModal';
 import SimpleMusicPlayer from '../SimpleMusicPlayer';
 import PhotoCarouselView from './components/PhotoCarouselView';
 import Link from 'next/link';
@@ -86,13 +87,13 @@ const DinamicGallery: React.FC = () => {
   };
 
   // Función para formatear tamaño de archivo
-  const formatFileSize = (bytes: number) => {
+  /* const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+  }; */
 
   // 🗑️ Handlers para eliminación
   const handleDeleteClick = (photo: HybridPhoto, e: React.MouseEvent) => {
@@ -575,126 +576,15 @@ const DinamicGallery: React.FC = () => {
       </div>
 
       {/* Modal de Foto Ampliada */}
-      {selectedPhoto && (
-        <div 
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-          onClick={() => setSelectedPhoto(null)}
-        >
-          <div 
-            className="max-w-4xl max-h-full bg-white rounded-2xl overflow-hidden shadow-2xl relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 🔘 Botón de cerrar en esquina superior derecha */}
-            <button
-              onClick={() => setSelectedPhoto(null)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                color: VIP_COLORS.rosaIntensa,
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-              }}
-              aria-label="Cerrar modal"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="flex flex-col md:flex-row">
-              {/* Imagen usando URL híbrida */}
-              <div className="flex-1 p-4 relative">
-                <Image
-                  src={getPhotoDisplayUrl(selectedPhoto, 'original')}
-                  alt={selectedPhoto.originalName}
-                  width={800}
-                  height={600}
-                  className="w-full h-auto max-h-96 object-contain rounded-lg"
-                />
-              </div>
-              
-              {/* Info */}
-              <div className="md:w-80 p-6 border-l" style={{ borderColor: `${VIP_COLORS.oroAurora}40` }}>
-                <h3 
-                  className="text-xl font-semibold mb-4"
-                  style={{ color: VIP_COLORS.rosaAurora }}
-                >
-                  {selectedPhoto.originalName}
-                </h3>
-                
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <span className="font-semibold" style={{ color: VIP_COLORS.rosaIntensa }}>Subido por:</span>
-                    <br />
-                    {selectedPhoto.uploaderName}
-                  </div>
-                  
-                  <div>
-                    <span className="font-semibold" style={{ color: VIP_COLORS.rosaIntensa }}>Momento:</span>
-                    <br />
-                    {selectedPhoto.eventMoment}
-                  </div>
-                  
-                  <div>
-                    <span className="font-semibold" style={{ color: VIP_COLORS.rosaIntensa }}>Fecha:</span>
-                    <br />
-                    {formatDate(selectedPhoto.uploadedAt)}
-                  </div>
-                  
-                  <div>
-                    <span className="font-semibold" style={{ color: VIP_COLORS.rosaIntensa }}>Tamaño:</span>
-                    <br />
-                    {formatFileSize(selectedPhoto.size)}
-                  </div>
-                  
-                  {selectedPhoto.comment && (
-                    <div>
-                      <span className="font-semibold" style={{ color: VIP_COLORS.rosaIntensa }}>Comentario:</span>
-                      <br />
-                      {selectedPhoto.comment}
-                    </div>
-                  )}
-                </div>
-                
-                {/* 🗑️ Botón de Eliminar Foto */}
-                <button
-                  onClick={() => {
-                    handleDeleteClick(selectedPhoto, { stopPropagation: () => {} } as React.MouseEvent);
-                    setSelectedPhoto(null); // Cerrar modal de vista
-                  }}
-                  disabled={isPhotoDeleting(selectedPhoto.id)}
-                  className="mt-6 w-full px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                  style={{
-                    background: `linear-gradient(135deg, ${VIP_COLORS.lavandaAurora}, ${VIP_COLORS.lavandaIntensa})`,
-                    color: 'white'
-                  }}
-                >
-                  {isPhotoDeleting(selectedPhoto.id) ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      <span>Eliminando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Trash2 size={16} />
-                      <span>Eliminar Foto</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => setSelectedPhoto(null)}
-                  className="mt-3 w-full px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105"
-                  style={{
-                    borderColor: VIP_COLORS.oroAurora,
-                    color: VIP_COLORS.rosaAurora,
-                    backgroundColor: 'transparent'
-                  }}
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <PhotoDetailModal
+        photo={selectedPhoto}
+        isOpen={!!selectedPhoto}
+        currentIndex={selectedPhoto ? photos.findIndex((p: HybridPhoto) => p.id === selectedPhoto.id) : -1}
+        onClose={() => setSelectedPhoto(null)}
+        onDeletePhoto={handleDeleteClick}
+        getPhotoDisplayUrl={getPhotoDisplayUrl}
+        isPhotoDeleting={isPhotoDeleting}
+      />
 
       {/* 🗑️ Modal de Confirmación de Eliminación */}
       <DeleteConfirmationModal

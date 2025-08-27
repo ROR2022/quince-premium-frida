@@ -196,9 +196,8 @@ const QRDownloadCard = forwardRef<HTMLDivElement, QRDownloadCardProps>(
               <Image
                 src={qrDataURL || "/placeholder.svg"}
                 alt="Código QR"
-                width={300}
                 height={300}
-                fill
+                width={300}
               />
             ) : (
               <div

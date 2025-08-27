@@ -88,7 +88,6 @@ const QRDownloadCard = forwardRef<HTMLDivElement, QRDownloadCardProps>(
                 <Image
                   src={qrDataURL}
                   alt="Código QR"
-                  width={300}
                   height={300}
                   fill
                 />
@@ -137,7 +136,6 @@ const QRDownloadCard = forwardRef<HTMLDivElement, QRDownloadCardProps>(
                 <Image
                   src={eventData.photoUrl}
                   alt={eventData.name}
-                  width={150}
                   height={150}
                   fill
                 />

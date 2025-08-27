@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import { Trash2, Loader2, Play, Pause, SkipBack, SkipForward, Maximize2 } from 'lucide-react';
+import { Trash2, Loader2, Play, Pause, SkipBack, SkipForward, Maximize2, Download } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
 
@@ -119,6 +119,43 @@ export const PhotoCarouselView: React.FC<PhotoCarouselViewProps> = ({
     api?.scrollTo(index);
   }, [api]);
 
+  // Función para descargar imagen
+  const handleDownloadImage = async (photo: HybridPhoto, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    try {
+      const imageUrl = getPhotoDisplayUrl(photo, 'original');
+      const response = await fetch(imageUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Error al descargar imagen: ${response.status}`);
+      }
+      
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      
+      // Crear elemento de descarga
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Crear nombre de archivo con timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
+      const fileName = `frida-quince-${timestamp}-${photo.originalName || 'imagen.jpg'}`;
+      link.download = fileName;
+      
+      // Ejecutar descarga
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Limpiar URL
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar imagen:', error);
+      alert('No se pudo descargar la imagen. Por favor, intenta nuevamente.');
+    }
+  };
+
   // Mostrar loading si no hay fotos
   if (loading) {
     return (
@@ -206,6 +243,18 @@ export const PhotoCarouselView: React.FC<PhotoCarouselViewProps> = ({
                       )}
                     </div>
                   </div>
+
+                  {/* Botón de descarga */}
+                  <button
+                    onClick={(e) => handleDownloadImage(photo, e)}
+                    className="absolute top-4 left-4 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                    style={{
+                      background: 'linear-gradient(135deg, #2196F3, #4CAF50)'
+                    }}
+                    aria-label={`Descargar foto ${photo.originalName}`}
+                  >
+                    <Download size={16} />
+                  </button>
 
                   {/* Botón de eliminación */}
                   <button
