@@ -185,7 +185,7 @@ const QRCode = () => {
             {/**Sección de Links */}
         <div className='flex flex-col gap-2'>
             {/* Botón de invitación premium */}
-        <Link href="/invitacion">
+        <Link href="/">
           <button 
             className="group relative px-8 py-4 rounded-full font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-xl overflow-hidden"
             style={{
@@ -239,7 +239,7 @@ const QRCode = () => {
         </Link>
 
         {/* Botón de galería */}
-        <Link href="/galeria">
+        <Link href="/gallery">
           <button 
             className="group relative px-8 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl overflow-hidden border-2"
             style={{
