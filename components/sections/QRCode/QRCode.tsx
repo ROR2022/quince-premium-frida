@@ -172,9 +172,9 @@ const QRCode = () => {
               title: "Mis XV Años",
               date: "27 de Septiembre 2025",
               venue: "Salón de Eventos Aurora",
-              qrCodeUrl: "https://quince-premium-frida.vercel.app/qrcode",
+              qrCodeUrl: "https://quince-premium-frida.vercel.app/gallery",
               photoUrl: "/images/frida6.jpg",
-              websiteUrl: "https://quince-premium-frida.vercel.app/galeria",
+              websiteUrl: "https://quince-premium-frida.vercel.app/gallery",
               message: "Comparte momentos únicos en mi día especial"
             }}
           />
