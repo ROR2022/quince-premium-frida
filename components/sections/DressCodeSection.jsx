@@ -71,6 +71,7 @@ export default function DressCodeSection() {
       locationCeremony: "Eventos Casablanca"
     };
 
+
   const handleConfirmPapa = () => {
     const confirmationNumber = "5530603612";
     // aqui se crea el mensaje

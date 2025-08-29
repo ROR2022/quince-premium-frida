@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Users, UserPlus, RefreshCw, Heart, Sparkles, Grid3X3, Table2 } from 'lucide-react';
 import { useGuests } from './hooks/useGuests';
@@ -47,10 +47,15 @@ const GuestsManagement = () => {
   const router = useRouter();
 
   // Función combinada para actualizar invitados y estadísticas
-  const handleRefreshAll = async () => {
+  const handleRefreshAll = useCallback(async () => {
     refresh(); // Actualizar lista de invitados
     refreshStats(); // Actualizar estadísticas
-  };
+  }, [refresh, refreshStats]);
+
+  useEffect(() => {
+    // cargar invitados solo cuando se monta el componente
+    handleRefreshAll();
+  }, [handleRefreshAll]);
 
   // Determinar si está cargando (cualquiera de los dos)
   const isLoading = loading || statsLoading;
@@ -131,7 +136,7 @@ const GuestsManagement = () => {
                style={{ 
                  background: "linear-gradient(135deg, var(--color-aurora-lavanda), var(--color-aurora-rosa))",
                }}>
-            <Users className="w-10 h-10 text-white" />
+            <Users className="w-10 h-10 text-black" />
           </div>
           
           <h1
@@ -148,8 +153,8 @@ const GuestsManagement = () => {
           
           <p className="text-xl leading-relaxed max-w-2xl mx-auto mb-8" 
              style={{ color: "var(--color-aurora-rosa)" }}>
-            Administra las invitaciones y confirmaciones para la quinceañera de
-            <span className="font-bold"> Fernanda Pérez Benítez</span>
+            Administra las invitaciones y confirmaciones de tus Invitados.
+            {/* <span className="font-bold"> Fernanda Pérez Benítez</span> */}
           </p>
 
           {/* Botón de actualización manual */}
@@ -232,7 +237,7 @@ const GuestsManagement = () => {
                 onClick={() => setViewMode('cards')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
                   viewMode === 'cards' 
-                    ? 'text-white shadow-lg' 
+                    ? 'text-slate-600 shadow-lg' 
                     : 'text-purple-600 hover:bg-white/50'
                 }`}
                 style={{
@@ -249,7 +254,7 @@ const GuestsManagement = () => {
                 onClick={() => setViewMode('table')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
                   viewMode === 'table' 
-                    ? 'text-white shadow-lg' 
+                    ? 'text-slate-600 shadow-lg' 
                     : 'text-purple-600 hover:bg-white/50'
                 }`}
                 style={{

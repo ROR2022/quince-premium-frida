@@ -53,7 +53,7 @@ const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
             className="p-2 rounded-xl shadow-md animate-vip-pulse-aurora"
             style={{ backgroundColor: 'var(--color-aurora-lavanda)' }}
           >
-            <Filter className="w-5 h-5 text-white" />
+            <Filter className="w-5 h-5 text-black" />
           </div>
           <h3 
             className="text-lg text-purple-600 font-semibold"

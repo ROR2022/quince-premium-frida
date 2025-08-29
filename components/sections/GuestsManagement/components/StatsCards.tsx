@@ -102,7 +102,7 @@ const StatsCards: React.FC = () => {
                 className="p-3 rounded-xl shadow-md animate-vip-pulse-aurora"
                 style={{ backgroundColor: stat.iconBg }}
               >
-                <Icon className="w-6 h-6 text-white" />
+                <Icon className="w-6 h-6 text-black" />
               </div>
 
               {/* Elemento decorativo flotante */}

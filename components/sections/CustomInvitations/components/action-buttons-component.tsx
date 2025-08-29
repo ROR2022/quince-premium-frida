@@ -2,9 +2,9 @@
 // 📁 components/ActionButtons.tsx
 // ================================================================
 
-import React from 'react';
+import React, {useState} from 'react';
 import { ActionButtonsProps } from '../types/invitation.types';
-import { generateWhatsAppMessage } from '../utils/invitation.utils';
+import { sendWhatsAppInvitationWithRegistration } from '../utils/invitation.utils';
 
 /**
  * Componente para los botones de acción principal
@@ -23,20 +23,37 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     formData.whatsappNumber &&
     formData.whatsappNumber.replace(/\D/g, "").length === 10
   );
+  const [isSending, setIsSending] = useState(false);
 
-  // Función para enviar por WhatsApp
-  const sendWhatsAppInvitation = (): void => {
+  
+  // Función para enviar por WhatsApp con registro automático en BD
+  const sendWhatsAppInvitation = async (): Promise<void> => {
     if (!isFormComplete) {
       alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
-    const message = generateWhatsAppMessage(formData);
-    const cleanNumber = formData.whatsappNumber.replace(/\D/g, "");
-    const mexicanNumber = `${cleanNumber}`;
-    const whatsappURL = `https://wa.me/521${mexicanNumber}?text=${encodeURIComponent(message)}`;
+    setIsSending(true);
     
-    window.open(whatsappURL, "_blank");
+    try {
+      const success = await sendWhatsAppInvitationWithRegistration(formData);
+      
+      if (success) {
+        // Mostrar mensaje de éxito más detallado
+        console.log(`✅ ¡Perfecto! 
+
+📱 Invitación enviada a ${formData.guestName} por WhatsApp
+📝 Registrado automáticamente en el sistema de gestión
+🎯 Ahora puedes ver este invitado en la sección "Gestión de Invitados"`);
+      } else {
+        console.error("❌ La invitación se abrió en WhatsApp, pero hubo un problema al registrar en el sistema. Puedes registrar manualmente en 'Gestión de Invitados'.");
+      }
+    } catch (error) {
+      console.error('Error al enviar invitación:', error);
+      console.error("❌ Error inesperado. Por favor intenta nuevamente.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -60,7 +77,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 rounded-lg font-bold shadow-lg transition-all disabled:cursor-not-allowed"
         title={!isFormComplete ? "Completa todos los campos para enviar por WhatsApp" : ""}
       >
-        📱 Enviar por WhatsApp
+        {isSending ? "⏳ Enviando..." : "📱 Enviar por WhatsApp"}
       </button>
 
       {/* Botón Descargar Imagen */}

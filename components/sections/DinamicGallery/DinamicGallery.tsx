@@ -158,6 +158,18 @@ const DinamicGallery: React.FC = () => {
           >
             Aún no hay fotos subidas. Usa el FotoUploader para compartir tus mejores momentos.
           </p>
+          <div>
+            <Link
+              href="/fotos"
+              className="inline-flex items-center px-6 py-3 rounded-full text-white font-semibold shadow-lg vip-shimmer-aurora hover:scale-105 transition-transform duration-300"
+              style={{
+                background: `linear-gradient(135deg, ${VIP_COLORS.rosaAurora}, ${VIP_COLORS.lavandaAurora})`
+              }}
+            >
+              <Camera size={20} className="mr-2" />
+              Subir Fotos
+            </Link>
+          </div>
         </div>
       </section>
     );

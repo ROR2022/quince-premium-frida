@@ -19,6 +19,7 @@ import InvitationEnvelope from "../components/sections/InvitationEnvelope"
 //import DecorationElement from "../components/DecorationElement"
 import { PremiumGallery } from "@/components/sections/PremiumGallery"
 import CustomInvitations from "@/components/sections/CustomInvitations/components/CustomInvitations"
+import AttendanceConfirmation from "@/components/sections/AttendanceConfirmation"
 
 export default function WeddingInvitation() {
   const [isOpenInvitation, setIsOpenInvitation] = useState(false);
@@ -60,6 +61,7 @@ export default function WeddingInvitation() {
       {/* <ReceptionSection /> */}
       <TimelineSection />
       <DressCodeSection />
+      <AttendanceConfirmation />
       <GiftsSection />
       {/* <GallerySection /> */}
       <PremiumGallery />

@@ -53,8 +53,8 @@ export const generateWhatsAppMessage = (formData: FormData): string => {
 
 ${formData.personalMessage}
 
-Tienes una invitación especial a mi fiesta de XV años:
-✨ Quinceañera ${EVENT_INFO.quinceaneraName} ✨
+Tienes una invitación especial a la Quinceañera de:
+✨ ${EVENT_INFO.quinceaneraName} ✨
 
 📅 Fecha: ${EVENT_INFO.date}
 🕖 Hora: ${EVENT_INFO.time}
@@ -64,10 +64,10 @@ Tienes una invitación especial a mi fiesta de XV años:
 Ver tu invitación mágica aquí:
 👉 ${EVENT_INFO.invitationUrl}
 
-💜 ¡Espero que celebres conmigo este día tan especial!
+💜 ¡Espero que celebres con nosotros este día tan especial!
 
 Con cariño,
-${EVENT_INFO.quinceaneraName}`;
+${EVENT_INFO.quinceaneraName} 🎉`;
 };
 
 /**
@@ -125,7 +125,7 @@ export const validatePhoneNumber = (phoneNumber: string): ValidationResult => {
 export const sendWhatsAppInvitation = (formData: FormData): void => {
   const validation = validateForm(formData);
   if (!validation.isValid) {
-    alert(validation.message);
+    console.error('❌ Validación fallida:', validation.message);
     return;
   }
   
@@ -228,4 +228,96 @@ export const validatePersonalMessage = (message: string): ValidationResult => {
   }
   
   return { isValid: true };
+};
+
+/**
+ * Crea o actualiza un invitado en la base de datos al enviar invitación
+ * @param formData - Datos del formulario de invitación
+ * @returns Promise<boolean> - true si fue exitoso
+ */
+export const createOrUpdateGuestFromInvitation = async (formData: FormData): Promise<boolean> => {
+  try {
+    // Mapear guestRelation a los valores válidos del modelo
+    const relationMap: Record<string, string> = {
+      'familia': 'familia',
+      'amigos': 'amigos', 
+      'escuela': 'escuela',
+      'trabajo': 'trabajo',
+      'otros': 'otros',
+      'amigo': 'amigos', // Mapeo adicional
+      'familiar': 'familia'
+    };
+
+    // Preparar datos del invitado según esquema de GuestsManagement
+    const guestData = {
+      name: formData.guestName.trim(),
+      phone: formData.whatsappNumber.replace(/\D/g, ''), // Solo números
+      relation: relationMap[formData.guestRelation.toLowerCase()] || 'otros',
+      personalInvitation: {
+        sent: true,
+        sentAt: new Date(),
+        message: formData.personalMessage.trim(),
+        numberOfGuests: parseInt(formData.numberOfGuests) || 1
+      }
+    };
+
+    console.log('📤 Enviando datos de invitado:', guestData);
+
+    // Intentar crear o actualizar el invitado
+    const response = await fetch('/api/guests', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(guestData),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      console.log('✅ Invitado registrado automáticamente:', result.data.name);
+      return true;
+    } else {
+      console.error('❌ Error al registrar invitado:', result.error);
+      // No bloqueamos el envío de WhatsApp por errores de BD
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Error de conexión al registrar invitado:', error);
+    // No bloqueamos el envío de WhatsApp por errores de conexión
+    return false;
+  }
+};
+
+/**
+ * Envía la invitación por WhatsApp y registra automáticamente en la BD
+ * @param formData - Datos del formulario
+ * @returns Promise<boolean> - true si el envío fue exitoso
+ */
+export const sendWhatsAppInvitationWithRegistration = async (formData: FormData): Promise<boolean> => {
+  const validation = validateForm(formData);
+  if (!validation.isValid) {
+    
+    console.error('❌ Validación fallida:', validation.message);
+    return false;
+  }
+  
+  try {
+    // 1. Registrar invitado en la base de datos (automático, no bloquea)
+    await createOrUpdateGuestFromInvitation(formData);
+    
+    // 2. Generar mensaje y enviar por WhatsApp
+    const message = generateWhatsAppMessage(formData);
+    const cleanNumber = formData.whatsappNumber.replace(/\D/g, "");
+    const mexicanNumber = `521${cleanNumber}`;
+    const whatsappURL = `https://wa.me/${mexicanNumber}?text=${encodeURIComponent(message)}`;
+    
+    // 3. Abrir WhatsApp
+    window.open(whatsappURL, "_blank");
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Error en el envío de invitación:', error);
+    return false;
+  }
 };
