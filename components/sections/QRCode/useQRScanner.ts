@@ -173,8 +173,19 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
 
   // 📹 Inicializar cámara
   const initializeCamera = useCallback(async () => {
+    const callTime = new Date().toISOString();
+    console.log('🎥 [' + callTime + '] initializeCamera LLAMADO');
+    console.log('🎥 Estado actual del scanner:', {
+      scannerExists: !!scannerRef.current,
+      isLoading: state.isLoading,
+      videoElement: !!videoRef.current
+    });
+    
     // Evitar múltiples llamadas simultáneas usando ref
-    if (scannerRef.current || state.isLoading) return;
+    if (scannerRef.current || state.isLoading) {
+      console.log('🛑 initializeCamera cancelado - scanner ya existe o está cargando');
+      return;
+    }
     
     try {
       console.log('🎥 Iniciando inicialización de cámara...');
@@ -235,11 +246,68 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
 
       console.log('✅ Scanner iniciado exitosamente');
       
-      // Forzar que el video sea visible
+      // Esperar un momento para que el video stream se configure
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Forzar que el video sea visible y verificar propiedades
       if (videoRef.current) {
-        videoRef.current.style.display = 'block';
-        videoRef.current.style.visibility = 'visible';
-        console.log('📺 Video forzado a ser visible');
+        const video = videoRef.current;
+        
+        console.log('📺 Estado del video antes de configurar:', {
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+          readyState: video.readyState,
+          srcObject: !!video.srcObject,
+          currentSrc: video.currentSrc,
+          style: {
+            display: video.style.display,
+            visibility: video.style.visibility,
+            width: video.style.width,
+            height: video.style.height,
+            opacity: video.style.opacity
+          }
+        });
+        
+        // Forzar estilos del video
+        video.style.display = 'block';
+        video.style.visibility = 'visible';
+        video.style.opacity = '1';
+        video.style.width = '100%';
+        video.style.height = 'auto';
+        video.style.maxWidth = '400px';
+        video.style.backgroundColor = 'black';
+        
+        // Verificar stream
+        if (video.srcObject) {
+          const stream = video.srcObject as MediaStream;
+          console.log('🎥 Stream info:', {
+            active: stream.active,
+            tracks: stream.getTracks().length,
+            videoTracks: stream.getVideoTracks().length,
+            audioTracks: stream.getAudioTracks().length
+          });
+          
+          const videoTracks = stream.getVideoTracks();
+          if (videoTracks.length > 0) {
+            const track = videoTracks[0];
+            console.log('� Video track info:', {
+              enabled: track.enabled,
+              readyState: track.readyState,
+              settings: track.getSettings(),
+              constraints: track.getConstraints()
+            });
+          }
+        }
+        
+        console.log('📺 Estado del video después de configurar:', {
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+          readyState: video.readyState,
+          clientWidth: video.clientWidth,
+          clientHeight: video.clientHeight,
+          offsetWidth: video.offsetWidth,
+          offsetHeight: video.offsetHeight
+        });
       }
 
       setState(prev => ({
@@ -430,9 +498,22 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
 
   // 🎬 Auto-iniciar si está configurado
   useEffect(() => {
+    console.log('🔄 useEffect principal ejecutándose');
+    console.log('🔄 Estado actual:', {
+      mode: state.mode,
+      autoStart: options.autoStart,
+      isScanning: state.isScanning,
+      error: state.error,
+      isLoading: state.isLoading,
+      videoElement: !!videoRef.current,
+      scannerExists: !!scannerRef.current
+    });
+    
     let mounted = true;
     
     const autoStart = async () => {
+      console.log('🎬 Evaluando condiciones para auto-start...');
+      
       if (
         mounted &&
         state.mode === 'camera' && 
@@ -442,17 +523,31 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
         !state.isLoading &&
         videoRef.current
       ) {
+        console.log('✅ Todas las condiciones cumplidas, iniciando cámara...');
         await initializeCamera();
+      } else {
+        console.log('❌ Condiciones no cumplidas:', {
+          mounted,
+          modeCamera: state.mode === 'camera',
+          autoStart: options.autoStart !== false,
+          notScanning: !state.isScanning,
+          noError: !state.error,
+          notLoading: !state.isLoading,
+          hasVideo: !!videoRef.current
+        });
       }
     };
 
     // Pequeño delay para asegurar que el video element esté disponible
+    console.log('⏰ Programando auto-start en 100ms...');
     const timer = setTimeout(autoStart, 100);
 
     return () => {
+      console.log('🧹 Cleanup useEffect principal');
       mounted = false;
       clearTimeout(timer);
       if (scannerRef.current) {
+        console.log('🛑 Parando scanner en cleanup');
         scannerRef.current.stop();
         scannerRef.current.destroy();
         scannerRef.current = null;

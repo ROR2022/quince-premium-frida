@@ -1,7 +1,6 @@
-// 📱 Componente ReadQR - Escáner de códigos QR - Aurora VIP Design
 'use client';
 
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { useQRScanner } from './useQRScanner';
 import { CONTENT_TYPE_CONFIG, QRScanResult } from './ReadQR.types';
 import styles from './ReadQR.module.css';
@@ -47,6 +46,20 @@ export default function ReadQR({
     onResult,
     onError
   });
+
+  // 🔍 Debug: Monitorear cambios de estado
+  useEffect(() => {
+    console.log('🔍 [ReadQR] Estado cambió:', {
+      mode,
+      isLoading,
+      isScanning,
+      hasPermission,
+      hasCamera,
+      error: !!error,
+      result: !!result,
+      videoElement: !!videoRef.current
+    });
+  }, [mode, isLoading, isScanning, hasPermission, hasCamera, error, result, videoRef]);
 
   // 📁 Manejar selección de archivo
   const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,14 +150,32 @@ export default function ReadQR({
             muted
             playsInline
             style={{ 
-              display: isScanning ? 'block' : 'none',
+              display: 'block', // Siempre visible para debugging
               width: '100%',
               height: 'auto',
               maxHeight: '400px',
               borderRadius: '10px',
-              objectFit: 'cover'
+              objectFit: 'cover',
+              backgroundColor: 'black'
             }}
           />
+          
+          {/* Debug info */}
+          <div style={{ 
+            position: 'absolute', 
+            top: 10, 
+            left: 10, 
+            background: 'rgba(0,0,0,0.7)', 
+            color: 'white', 
+            padding: '5px',
+            fontSize: '12px',
+            borderRadius: '5px',
+            zIndex: 10
+          }}>
+            Estado: {isScanning ? '🔄 Escaneando' : '⏸️ Pausado'} | 
+            Carga: {isLoading ? '⏳' : '✅'} | 
+            Error: {error ? '❌' : '✅'}
+          </div>
           
           {isScanning && (
             <div className={styles.scanRegion}>
