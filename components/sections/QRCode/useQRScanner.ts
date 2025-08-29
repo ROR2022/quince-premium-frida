@@ -173,8 +173,8 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
 
   // 📹 Inicializar cámara
   const initializeCamera = useCallback(async () => {
-    // Evitar múltiples llamadas simultáneas
-    if (state.isLoading || state.isScanning) return;
+    // Evitar múltiples llamadas simultáneas usando ref
+    if (scannerRef.current || state.isLoading) return;
     
     try {
       console.log('🎥 Iniciando inicialización de cámara...');
@@ -270,7 +270,7 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
       
       options.onError?.(errorMessage);
     }
-  }, [state.isLoading, state.isScanning, processQRResult, options]);
+  }, [processQRResult, options]); // Solo dependencias estables
 
   // ⏹️ Detener cámara
   const stopCamera = useCallback(() => {
@@ -458,7 +458,7 @@ export function useQRScanner(options: UseQRScannerOptions = {}) {
         scannerRef.current = null;
       }
     };
-  }, [state.mode, options.autoStart, state.isScanning, state.error, state.isLoading, initializeCamera]);
+  }, [state.mode, options.autoStart]); // Solo dependencias estables
 
   // 🧹 Cleanup al desmontar
   useEffect(() => {
