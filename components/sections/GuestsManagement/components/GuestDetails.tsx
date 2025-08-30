@@ -428,28 +428,18 @@ const GuestDetails: FC<GuestDetailsProps> = ({ dataGuest }) => {
 
         {/* Footer con acciones adicionales */}
         <div 
-        style={{display: 'none'}}
+        //style={{display: 'none'}}
         className="mt-8 bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-violet-200">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href={`/invitados/${dataGuest._id}/edit`}
+              href={`/qrcode/create/${dataGuest._id}`}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <User className="w-5 h-5" />
-              Editar Invitado
+              Generar QR de: {dataGuest.name}
             </Link>
             
-            {dataGuest.phone && (
-              <a
-                href={`https://wa.me/${dataGuest.phone.replace(/\D/g, '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                <Phone className="w-5 h-5" />
-                Contactar por WhatsApp
-              </a>
-            )}
+            
           </div>
         </div>
       </div>

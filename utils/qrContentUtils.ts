@@ -9,7 +9,8 @@ export const detectContentType = (content: string): ContentTypeDetection => {
   if (!content || content.trim().length === 0) {
     return {
       type: 'unknown',
-      isValid: false
+      isValid: false,
+      actions: []
     };
   }
 
@@ -20,12 +21,7 @@ export const detectContentType = (content: string): ContentTypeDetection => {
     return {
       type: 'url',
       isValid: true,
-      formatted: normalizeURL(trimmedContent),
-      action: {
-        label: 'Abrir URL',
-        handler: () => openURL(normalizeURL(trimmedContent)),
-        icon: '🚀'
-      }
+      actions: ['open', 'copy']
     };
   }
 
@@ -34,12 +30,7 @@ export const detectContentType = (content: string): ContentTypeDetection => {
     return {
       type: 'email',
       isValid: true,
-      formatted: normalizeEmail(trimmedContent),
-      action: {
-        label: 'Enviar Email',
-        handler: () => openEmail(normalizeEmail(trimmedContent)),
-        icon: '📧'
-      }
+      actions: ['mailto', 'copy']
     };
   }
 
@@ -48,12 +39,7 @@ export const detectContentType = (content: string): ContentTypeDetection => {
     return {
       type: 'phone',
       isValid: true,
-      formatted: normalizePhone(trimmedContent),
-      action: {
-        label: 'Llamar',
-        handler: () => openPhone(normalizePhone(trimmedContent)),
-        icon: '📞'
-      }
+      actions: ['call', 'copy']
     };
   }
 
@@ -61,12 +47,7 @@ export const detectContentType = (content: string): ContentTypeDetection => {
   return {
     type: 'text',
     isValid: true,
-    formatted: trimmedContent,
-    action: {
-      label: 'Copiar Texto',
-      handler: () => copyToClipboard(trimmedContent),
-      icon: '📋'
-    }
+    actions: ['copy']
   };
 };
 

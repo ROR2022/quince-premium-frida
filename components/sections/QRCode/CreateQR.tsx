@@ -27,15 +27,51 @@ import {
 } from './CreateQR.types';
 import styles from './CreateQR.module.css';
 
+interface CreateQRProps {
+  urlLink: string;
+}
+
+//https://quince-premium-frida.vercel.app/invitados/68b22163c8fce5afcf5fd7ce
+//https://quince-premium-frida.vercel.app/invitados/68b22163c8fce5afcf5fd7ce
+
 // 🎯 Componente CreateQR - Generador de códigos QR personalizados
-const CreateQR: React.FC = () => {
+const CreateQR: React.FC<CreateQRProps> = ({urlLink}) => {
+  console.log('🚀 [CreateQR] Componente inicializado con props:', {
+    urlLink: urlLink,
+    urlLinkType: typeof urlLink,
+    urlLinkLength: urlLink?.length,
+    isEmpty: !urlLink,
+    isValidInitialUrl: urlLink ? validateURL(urlLink) : false
+  });
+
   // 📊 Estado principal del componente
-  const [state, setState] = useState<CreateQRState>({
-    url: '',
-    isValidUrl: false,
-    qrOptions: DEFAULT_QR_OPTIONS,
-    isGenerating: false,
-    error: null
+  const [state, setState] = useState<CreateQRState>(() => {
+    const initialState = {
+      url: urlLink,
+      isValidUrl: false,
+      qrOptions: DEFAULT_QR_OPTIONS,
+      isGenerating: false,
+      error: null
+    };
+
+    console.log('📊 [CreateQR] Estado inicial configurado:', initialState);
+    
+    // Validar URL inicial si existe
+    if (urlLink) {
+      const normalizedUrl = normalizeURL(urlLink);
+      const isValid = validateURL(normalizedUrl);
+      console.log('🔍 [CreateQR] Validación URL inicial:', {
+        original: urlLink,
+        normalized: normalizedUrl,
+        isValid: isValid,
+        urlType: getURLType(normalizedUrl)
+      });
+      
+      initialState.url = normalizedUrl;
+      initialState.isValidUrl = isValid;
+    }
+
+    return initialState;
   });
 
   // 🔧 Hook de generación QR con eventData dummy
@@ -62,9 +98,56 @@ const CreateQR: React.FC = () => {
 
   // 🔍 Validación de URL en tiempo real
   const handleURLChange = useCallback((newUrl: string) => {
-    const isValid = validateURL(newUrl);
+    console.log('🔍 [URL Change] Iniciando validación:', {
+      originalUrl: newUrl,
+      trimmedUrl: newUrl.trim(),
+      urlLength: newUrl.length,
+      isEmpty: newUrl.trim().length === 0
+    });
+
+    // Verificar si está vacía
+    if (!newUrl.trim()) {
+      console.log('❌ [URL Change] URL vacía detectada');
+      updateState({
+        url: newUrl,
+        isValidUrl: false,
+        error: null
+      });
+      return;
+    }
+
+    // Normalizar URL antes de validar
+    const normalizedUrl = normalizeURL(newUrl);
+    console.log('🔄 [URL Change] URL normalizada:', {
+      original: newUrl,
+      normalized: normalizedUrl,
+      wasChanged: newUrl !== normalizedUrl
+    });
+
+    // Realizar validación
+    const isValid = validateURL(normalizedUrl);
+    console.log('✅ [URL Change] Resultado de validación:', {
+      url: normalizedUrl,
+      isValid: isValid,
+      urlType: getURLType(normalizedUrl)
+    });
+
+    // Si es inválida, mostrar detalles de por qué
+    if (!isValid) {
+      console.log('❌ [URL Change] URL inválida - Análisis detallado:', {
+        url: normalizedUrl,
+        hasProtocol: /^(https?|mailto|tel|sms|whatsapp|telegram):/i.test(normalizedUrl),
+        matchesWebRegex: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[;&a-z\d%_\.~+=-]*)?(#[-a-z\d_]*)?$/i.test(normalizedUrl),
+        matchesSpecialProtocol: /^(mailto:|tel:|sms:|whatsapp:|telegram:)/i.test(normalizedUrl),
+        isEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedUrl),
+        isPhone: /^[\+]?[1-9][\d\s\-\(\)]{7,}$/.test(normalizedUrl),
+        containsDot: normalizedUrl.includes('.'),
+        length: normalizedUrl.length
+      });
+    }
+
     updateState({
-      url: newUrl,
+      url: normalizedUrl,
       isValidUrl: isValid,
       error: null
     });
@@ -72,13 +155,62 @@ const CreateQR: React.FC = () => {
 
   // ✅ Validación manual de URL
   const handleValidateURL = useCallback(() => {
+    console.log('🎯 [Manual Validation] Iniciando validación manual:', {
+      currentUrl: state.url,
+      trimmedUrl: state.url.trim(),
+      isEmpty: !state.url.trim()
+    });
+
     if (!state.url.trim()) {
+      console.log('❌ [Manual Validation] Error: URL vacía');
       updateState({ error: 'Por favor ingresa una URL' });
       return;
     }
 
+    console.log('🔄 [Manual Validation] Normalizando URL...');
     const normalizedUrl = normalizeURL(state.url);
+    console.log('🔄 [Manual Validation] Resultado de normalización:', {
+      original: state.url,
+      normalized: normalizedUrl,
+      changed: state.url !== normalizedUrl
+    });
+
+    console.log('🔍 [Manual Validation] Realizando validación completa...');
     const isValid = validateURL(normalizedUrl);
+    
+    console.log('📊 [Manual Validation] Análisis completo:', {
+      url: normalizedUrl,
+      isValid: isValid,
+      urlType: getURLType(normalizedUrl),
+      validations: {
+        hasProtocol: /^(https?|mailto|tel|sms|whatsapp|telegram):/i.test(normalizedUrl),
+        webRegexMatch: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[;&a-z\d%_\.~+=-]*)?(#[-a-z\d_]*)?$/i.test(normalizedUrl),
+        specialProtocolMatch: /^(mailto:|tel:|sms:|whatsapp:|telegram:)/i.test(normalizedUrl),
+        emailFormat: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedUrl),
+        phoneFormat: /^[\+]?[1-9][\d\s\-\(\)]{7,}$/.test(normalizedUrl)
+      },
+      structure: {
+        containsDot: normalizedUrl.includes('.'),
+        containsAtSymbol: normalizedUrl.includes('@'),
+        containsColon: normalizedUrl.includes(':'),
+        length: normalizedUrl.length,
+        startsWithHttp: normalizedUrl.toLowerCase().startsWith('http'),
+        startsWithMailto: normalizedUrl.toLowerCase().startsWith('mailto:'),
+        startsWithTel: normalizedUrl.toLowerCase().startsWith('tel:')
+      }
+    });
+
+    if (isValid) {
+      console.log('✅ [Manual Validation] URL válida confirmada');
+    } else {
+      console.log('❌ [Manual Validation] URL inválida - Razones posibles:', {
+        noProtocol: !/^(https?|mailto|tel|sms|whatsapp|telegram):/i.test(normalizedUrl),
+        invalidWebFormat: !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?[;&a-z\d%_\.~+=-]*)?(#[-a-z\d_]*)?$/i.test(normalizedUrl) && !/^(mailto:|tel:|sms:|whatsapp:|telegram:)/i.test(normalizedUrl),
+        missingDomain: !normalizedUrl.includes('.') && !/^(mailto:|tel:|sms:|whatsapp:|telegram:)/i.test(normalizedUrl),
+        tooShort: normalizedUrl.length < 5,
+        invalidCharacters: /[<>"\s]/.test(normalizedUrl)
+      });
+    }
 
     updateState({
       url: normalizedUrl,
@@ -108,20 +240,59 @@ const CreateQR: React.FC = () => {
 
   // 🎯 Generación automática de QR al cambiar opciones
   useEffect(() => {
+    console.log('🎯 [QR Generation] useEffect triggered:', {
+      isValidUrl: state.isValidUrl,
+      url: state.url,
+      qrOptionsChanged: state.qrOptions
+    });
+
     if (state.isValidUrl && state.url) {
+      console.log('✅ [QR Generation] Condiciones cumplidas para generar QR:', {
+        url: state.url,
+        urlType: getURLType(state.url),
+        qrOptions: state.qrOptions
+      });
+
       updateState({ isGenerating: true, error: null });
       
+      console.log('🔄 [QR Generation] Llamando generateCustomQR con parámetros:', {
+        url: state.url,
+        options: {
+          size: state.qrOptions.size,
+          margin: state.qrOptions.margin,
+          errorCorrectionLevel: state.qrOptions.errorCorrectionLevel,
+          darkColor: state.qrOptions.darkColor,
+          lightColor: state.qrOptions.lightColor
+        }
+      });
+
       generateCustomQR(state.url, {
         size: state.qrOptions.size,
         margin: state.qrOptions.margin,
         errorCorrectionLevel: state.qrOptions.errorCorrectionLevel,
         darkColor: state.qrOptions.darkColor,
         lightColor: state.qrOptions.lightColor
+      }).then(() => {
+        console.log('✅ [QR Generation] QR generado exitosamente');
       }).catch((error) => {
+        console.error('❌ [QR Generation] Error generando QR:', {
+          error: error,
+          errorMessage: error.message,
+          errorStack: error.stack,
+          url: state.url,
+          options: state.qrOptions
+        });
         updateState({ 
           error: `Error generando QR: ${error.message}`,
           isGenerating: false 
         });
+      });
+    } else {
+      console.log('⚠️ [QR Generation] Condiciones no cumplidas:', {
+        isValidUrl: state.isValidUrl,
+        hasUrl: !!state.url,
+        url: state.url,
+        reason: !state.isValidUrl ? 'URL inválida' : !state.url ? 'URL vacía' : 'Condiciones desconocidas'
       });
     }
   }, [state.isValidUrl, state.url, state.qrOptions, generateCustomQR, updateState]);
@@ -134,9 +305,16 @@ const CreateQR: React.FC = () => {
   // ❌ Manejo de errores del hook
   useEffect(() => {
     if (qrError) {
+      console.error('❌ [QR Hook Error] Error del hook de generación:', {
+        error: qrError,
+        currentUrl: state.url,
+        currentOptions: state.qrOptions,
+        isValidUrl: state.isValidUrl,
+        timestamp: new Date().toISOString()
+      });
       updateState({ error: qrError });
     }
-  }, [qrError, updateState]);
+  }, [qrError, updateState, state.url, state.qrOptions, state.isValidUrl]);
 
   // 💾 Función de descarga PNG
   const handleDownloadPNG = useCallback(async () => {
@@ -245,11 +423,20 @@ const CreateQR: React.FC = () => {
         {/* Estado de validación */}
         {state.url && (
           <div className={`${styles.urlStatus} ${state.isValidUrl ? styles.valid : styles.invalid}`}>
-            {state.isValidUrl ? (
-              <>✅ URL válida ({urlType})</>
-            ) : (
-              <>❌ URL inválida - Verifica el formato</>
-            )}
+            {(() => {
+              console.log('🎨 [URL Status Render] Renderizando estado de URL:', {
+                url: state.url,
+                isValid: state.isValidUrl,
+                urlType: urlType,
+                displayStatus: state.isValidUrl ? 'válida' : 'inválida'
+              });
+              
+              return state.isValidUrl ? (
+                <>✅ URL válida ({urlType})</>
+              ) : (
+                <>❌ URL inválida - Verifica el formato</>
+              );
+            })()}
           </div>
         )}
 

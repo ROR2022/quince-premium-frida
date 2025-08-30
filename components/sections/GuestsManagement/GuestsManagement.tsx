@@ -52,11 +52,11 @@ const GuestsManagement = () => {
     refreshStats(); // Actualizar estadísticas
   }, [refresh, refreshStats]);
 
-  useEffect(() => {
+   useEffect(() => {
     // cargar invitados solo cuando se monta el componente
     handleRefreshAll();
-  }, [handleRefreshAll]);
-
+  }, []);
+ 
   // Determinar si está cargando (cualquiera de los dos)
   const isLoading = loading || statsLoading;
 
