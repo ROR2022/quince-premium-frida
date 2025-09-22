@@ -181,7 +181,7 @@ export const useHybridUpload = () => {
   }, []);
 
   /**
-   * Sube archivos usando Cloudinary
+   * Sube archivos usando Cloudinary (MODO INDIVIDUAL)
    */
   const uploadWithCloudinary = useCallback(async (
     filesToUpload: UploadFile[],
@@ -189,95 +189,112 @@ export const useHybridUpload = () => {
   ): Promise<boolean> => {
     try {
       console.log('🌩️ useHybridUpload: Attempting Cloudinary upload...');
-      console.log('☁️ useHybridUpload: Preparando FormData para Cloudinary...');
+      console.log('☁️ useHybridUpload: MODO INDIVIDUAL - Subiendo archivos de uno en uno...');
       
-      const uploadFormData = new FormData();
-      
-      // Agregar archivos con el nombre correcto que espera la API de Cloudinary
-      filesToUpload.forEach((fileObj, index) => {
-        console.log(`📎 useHybridUpload: Agregando archivo ${index + 1} a Cloudinary: ${fileObj.file.name}`);
-        uploadFormData.append('files', fileObj.file);
-      });
+      const successfulUploads: any[] = [];
+      const failedUploads: string[] = [];
 
-      // Agregar metadatos opcionales
-      if (formData?.uploaderName) {
-        uploadFormData.append('uploaderName', formData.uploaderName);
-        console.log('👤 useHybridUpload: Agregado uploaderName:', formData.uploaderName);
-      }
-      if (formData?.userName) {
-        uploadFormData.append('userName', formData.userName);
-        console.log('👤 useHybridUpload: Agregado userName:', formData.userName);
-      }
-      if (formData?.eventMoment) {
-        uploadFormData.append('eventMoment', formData.eventMoment);
-        console.log('📅 useHybridUpload: Agregado eventMoment:', formData.eventMoment);
-      }
-      if (formData?.comment) {
-        uploadFormData.append('comment', formData.comment);
-        console.log('💬 useHybridUpload: Agregado comment:', formData.comment);
-      }
+      // 🔄 NUEVO: Subir archivos de uno en uno
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const fileObj = filesToUpload[i];
+        console.log(`📎 useHybridUpload: Subiendo archivo ${i + 1}/${filesToUpload.length}: ${fileObj.file.name}`);
+        
+        try {
+          // Crear FormData individual para cada archivo
+          const singleFormData = new FormData();
+          singleFormData.append('files', fileObj.file);
 
-      // Log del FormData preparado
-      console.log('📦 useHybridUpload: FormData para Cloudinary preparado con:', {
-        archivos: filesToUpload.length,
-        campos: Array.from(uploadFormData.keys())
-      });
+          // Agregar metadatos opcionales
+          if (formData?.uploaderName) {
+            singleFormData.append('uploaderName', formData.uploaderName);
+          }
+          if (formData?.userName) {
+            singleFormData.append('userName', formData.userName);
+          }
+          if (formData?.eventMoment) {
+            singleFormData.append('eventMoment', formData.eventMoment);
+          }
+          if (formData?.comment) {
+            singleFormData.append('comment', formData.comment);
+          }
 
-      console.log('🚀 useHybridUpload: Enviando request a /api/upload-fotos-cloudinary...');
-      const response = await fetch('/api/upload-fotos-cloudinary', {
-        method: 'POST',
-        body: uploadFormData,
-        signal: abortControllerRef.current?.signal,
-      });
+          console.log(`� useHybridUpload: Enviando archivo ${i + 1} a /api/upload-fotos-cloudinary...`);
+          const response = await fetch('/api/upload-fotos-cloudinary', {
+            method: 'POST',
+            body: singleFormData,
+            signal: abortControllerRef.current?.signal,
+          });
 
-      console.log('📡 useHybridUpload: Respuesta de Cloudinary:', {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok
-      });
+          console.log(`📡 useHybridUpload: Respuesta archivo ${i + 1}:`, {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok
+          });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ useHybridUpload: Cloudinary upload failed:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        throw new Error(`Cloudinary upload failed: ${response.status} ${response.statusText}`);
-      }
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`❌ useHybridUpload: Upload falló para archivo ${i + 1}:`, {
+              fileName: fileObj.file.name,
+              status: response.status,
+              error: errorText
+            });
+            failedUploads.push(`${fileObj.file.name}: ${response.status} ${response.statusText}`);
+            continue; // Continúa con el siguiente archivo
+          }
 
-      const result = await response.json();
-      console.log('✅ useHybridUpload: Cloudinary upload successful:', result);
+          const result = await response.json();
+          console.log(`✅ useHybridUpload: Archivo ${i + 1} subido exitosamente:`, {
+            fileName: fileObj.file.name,
+            cloudinaryId: result.data?.files?.[0]?.cloudinaryId
+          });
 
-      // 🆕 Registrar automáticamente en MongoDB
-      if (result.data && result.data.files && Array.isArray(result.data.files)) {
-        console.log('💾 useHybridUpload: Registrando archivos de Cloudinary en MongoDB...');
-        for (let i = 0; i < result.data.files.length && i < filesToUpload.length; i++) {
-          const uploadResult = result.data.files[i];
-          const file = filesToUpload[i].file;
-          
-          console.log(`💾 useHybridUpload: Registrando archivo ${i + 1} en MongoDB:`, uploadResult.cloudinaryId);
-          
-          // Convertir estructura de la API a la estructura esperada por registerPhotoInDB
-          const adaptedResult: UploadResult = {
-            filename: uploadResult.originalName,
-            cloudinaryData: {
-              public_id: uploadResult.cloudinaryId,
-              secure_url: uploadResult.urls?.original || '',
-              url: uploadResult.urls?.original || '',
-              width: uploadResult.metadata?.width,
-              height: uploadResult.metadata?.height,
-              format: uploadResult.metadata?.format,
-              bytes: uploadResult.metadata?.optimizedSize
-            }
-          };
-          
-          // Registrar cada archivo en MongoDB
-          await registerPhotoInDB(file, adaptedResult, 'cloudinary', formData);
+          // Registrar en MongoDB inmediatamente
+          if (result.data && result.data.files && Array.isArray(result.data.files) && result.data.files.length > 0) {
+            const uploadResult = result.data.files[0];
+            console.log(`💾 useHybridUpload: Registrando archivo ${i + 1} en MongoDB:`, uploadResult.cloudinaryId);
+            
+            const adaptedResult: UploadResult = {
+              filename: uploadResult.originalName,
+              cloudinaryData: {
+                public_id: uploadResult.cloudinaryId,
+                secure_url: uploadResult.urls?.original || '',
+                url: uploadResult.urls?.original || '',
+                width: uploadResult.metadata?.width,
+                height: uploadResult.metadata?.height,
+                format: uploadResult.metadata?.format,
+                bytes: uploadResult.metadata?.optimizedSize
+              }
+            };
+            
+            await registerPhotoInDB(fileObj.file, adaptedResult, 'cloudinary', formData);
+            successfulUploads.push(uploadResult);
+          }
+
+        } catch (error) {
+          console.error(`❌ useHybridUpload: Error en archivo ${i + 1} (${fileObj.file.name}):`, error);
+          failedUploads.push(`${fileObj.file.name}: ${error instanceof Error ? error.message : 'Error desconocido'}`);
         }
-        console.log('✅ useHybridUpload: Todos los archivos de Cloudinary registrados en MongoDB');
       }
 
+      // Evaluación final
+      console.log('📊 useHybridUpload: Resumen de uploads:', {
+        total: filesToUpload.length,
+        exitosos: successfulUploads.length,
+        fallidos: failedUploads.length,
+        fallidosDetalle: failedUploads
+      });
+
+      if (successfulUploads.length === 0) {
+        console.error('❌ useHybridUpload: Ningún archivo se subió exitosamente');
+        throw new Error(`No se pudo subir ningún archivo. Errores: ${failedUploads.join('; ')}`);
+      }
+
+      if (failedUploads.length > 0) {
+        console.warn('⚠️ useHybridUpload: Algunos archivos fallaron:', failedUploads);
+        // Nota: No lanzamos error aquí si al menos algunos se subieron exitosamente
+      }
+
+      console.log(`✅ useHybridUpload: Upload completado - ${successfulUploads.length}/${filesToUpload.length} archivos exitosos`);
       return true;
 
     } catch (error) {
@@ -471,6 +488,24 @@ export const useHybridUpload = () => {
         size: f.size,
         type: f.type
       })));
+
+      // 📏 NUEVA VALIDACIÓN: Verificar tamaño máximo de archivos (4.5MB)
+      const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB
+      console.log('📏 useHybridUpload: Verificando tamaño máximo de archivos (4.5MB)...');
+      
+      for (const file of fileArray) {
+        if (file.size > MAX_FILE_SIZE) {
+          const fileSizeMB = (file.size / 1024 / 1024).toFixed(1);
+          const errorMessage = `El archivo "${file.name}" es demasiado grande (${fileSizeMB}MB). Máximo permitido: 4.5MB`;
+          console.error('❌ useHybridUpload: Archivo demasiado grande:', {
+            fileName: file.name,
+            fileSize: fileSizeMB + 'MB',
+            maxAllowed: '4.5MB'
+          });
+          throw new Error(errorMessage);
+        }
+      }
+      console.log('✅ useHybridUpload: Todos los archivos tienen tamaño válido');
       
       // Crear FileList mock para validación
       const fileList = {
