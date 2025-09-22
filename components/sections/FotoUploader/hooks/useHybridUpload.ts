@@ -3,6 +3,9 @@ import { UploadState, UploaderFormData, UploadFile } from '../types/upload.types
 import { validateFileList, generateFileId } from '../utils/imageValidation';
 // import { ERROR_MESSAGES } from '@/components/sections/FotoUploader/constants/upload.constants';
 
+// 🔌 Activar interceptor de logs para envío automático al servidor
+import '@/utils/logInterceptor';
+
 // Interfaz para los datos de Cloudinary
 interface CloudinaryData {
   public_id: string;

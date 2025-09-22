@@ -22,6 +22,10 @@ import { VIP_COLORS, UI_CONFIG } from "./constants/upload.constants";
 import { UploaderFormData } from "./types/upload.types";
 import { useHybridUpload } from "./hooks/useHybridUpload";
 
+// 🔌 Activar interceptor de logs para envío automático al servidor
+import '@/utils/logInterceptor';
+
+
 /**
  * Componente principal para subir fotos con diseño VIP mexicano
  */
