@@ -406,7 +406,7 @@ const FotoUploader: React.FC = () => {
                 //style={{ color: VIP_COLORS.lavandaAurora }}
               >
                 <p>📁 Formatos: JPG, PNG, WEBP</p>
-                <p>📏 Tamaño máximo: 10MB por foto</p>
+                <p>📏 Tamaño máximo: 4.5MB por foto</p>
                 <p>🖼️ Hasta 10 fotos a la vez</p>
                 {systemType === "cloudinary" && (
                   <p className="text-blue-600">
