@@ -466,7 +466,7 @@ const FotoUploader: React.FC = () => {
                           size={24}
                           className="animate-spin mx-auto mb-2"
                         />
-                        <div className="text-sm">{uploadState.progress}%</div>
+                        <div className="text-sm"></div>
                       </div>
                     </div>
                   )}
@@ -728,7 +728,7 @@ const FotoUploader: React.FC = () => {
                 {uploadState.uploading ? (
                   <>
                     <Loader2 size={20} className="inline mr-2 animate-spin" />
-                    Subiendo... {uploadState.progress}%
+                    Subiendo...
                   </>
                 ) : (
                   <>
