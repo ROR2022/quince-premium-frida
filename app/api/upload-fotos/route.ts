@@ -198,8 +198,19 @@ const saveMetadata = async (uploadData: {
 };
 
 export async function POST(request: NextRequest) {
+  console.log('📁 API Upload Local POST: Iniciando proceso de upload local');
+  console.log('🌐 API Upload Local POST: Request info:', {
+    url: request.url,
+    method: request.method,
+    headers: {
+      contentType: request.headers.get('content-type'),
+      userAgent: request.headers.get('user-agent'),
+      origin: request.headers.get('origin')
+    }
+  });
+
   try {
-    console.log('📸 Starting file upload process...');
+    console.log('📝 API Upload Local POST: Obteniendo FormData...');
     
     // Obtener FormData
     const formData = await request.formData();
@@ -209,8 +220,22 @@ export async function POST(request: NextRequest) {
     const eventMoment = formData.get('eventMoment') as string;
     const comment = formData.get('comment') as string;
 
+    console.log('📊 API Upload Local POST: Datos recibidos:', {
+      filesCount: files.length,
+      uploaderName: uploaderName || 'No especificado',
+      userName: userName || 'No especificado',
+      eventMoment: eventMoment || 'No especificado',
+      comment: comment ? `"${comment.substring(0, 50)}..."` : 'No especificado',
+      files: files.map(f => ({
+        name: f.name,
+        size: `${(f.size / 1024 / 1024).toFixed(2)}MB`,
+        type: f.type
+      }))
+    });
+
     // Validar que hay archivos
     if (!files || files.length === 0) {
+      console.error('❌ API Upload Local POST: No se recibieron archivos');
       return NextResponse.json(
         { success: false, message: 'No se recibieron archivos' },
         { status: 400 }
@@ -219,6 +244,10 @@ export async function POST(request: NextRequest) {
 
     // Validar número de archivos
     if (files.length > UPLOAD_CONFIG.maxFiles) {
+      console.error('❌ API Upload Local POST: Demasiados archivos:', {
+        received: files.length,
+        maxAllowed: UPLOAD_CONFIG.maxFiles
+      });
       return NextResponse.json(
         { success: false, message: `Máximo ${UPLOAD_CONFIG.maxFiles} archivos permitidos` },
         { status: 400 }
@@ -226,47 +255,70 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear directorios necesarios
+    console.log('📁 API Upload Local POST: Creando directorios necesarios...');
     const today = await ensureDirectories();
-    console.log(`📁 Directories created for date: ${today}`);
+    console.log(`✅ API Upload Local POST: Directorios creados para fecha: ${today}`);
 
     // Procesar cada archivo
+    console.log('🔄 API Upload Local POST: Iniciando procesamiento de archivos...');
     const processedFiles = [];
     
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(`🔄 Processing file ${i + 1}/${files.length}: ${file.name} (${file.size} bytes)`);
+      console.log(`� API Upload Local POST: Procesando archivo ${i + 1}/${files.length}:`, {
+        name: file.name,
+        size: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
+        type: file.type,
+        lastModified: new Date(file.lastModified).toISOString()
+      });
 
       try {
         // Validar tipo de archivo
         if (!UPLOAD_CONFIG.allowedTypes.includes(file.type)) {
+          console.error('❌ API Upload Local POST: Tipo de archivo no permitido:', {
+            fileName: file.name,
+            fileType: file.type,
+            allowedTypes: UPLOAD_CONFIG.allowedTypes
+          });
           throw new Error(`Tipo de archivo no permitido: ${file.type}`);
         }
 
         // Validar tamaño
         if (file.size > UPLOAD_CONFIG.maxFileSize) {
+          console.error('❌ API Upload Local POST: Archivo demasiado grande:', {
+            fileName: file.name,
+            fileSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
+            maxSize: `${(UPLOAD_CONFIG.maxFileSize / 1024 / 1024).toFixed(2)}MB`
+          });
           throw new Error(`Archivo demasiado grande: ${file.name}`);
         }
 
         // Convertir a buffer
-        console.log('🔄 Converting file to buffer...');
+        console.log('🔄 API Upload Local POST: Convirtiendo archivo a buffer...');
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        console.log('✅ Buffer created, size:', buffer.length);
+        console.log(`✅ API Upload Local POST: Buffer creado, tamaño: ${(buffer.length / 1024 / 1024).toFixed(2)}MB`);
 
         // Generar nombre único
         const uniqueFileName = generateUniqueFileName(file.name);
-        console.log('📝 Generated unique filename:', uniqueFileName);
+        console.log('📝 API Upload Local POST: Nombre único generado:', {
+          original: file.name,
+          unique: uniqueFileName
+        });
         
         // Guardar archivo original
         const originalPath = path.join(UPLOAD_CONFIG.uploadDir, 'fotos', today, 'original', uniqueFileName);
-        console.log('💾 Saving original file to:', originalPath);
+        console.log('💾 API Upload Local POST: Guardando archivo original en:', originalPath);
         await writeFile(originalPath, buffer);
-        console.log('✅ Original file saved');
+        console.log('✅ API Upload Local POST: Archivo original guardado exitosamente');
 
         // Comprimir y crear thumbnail
-        console.log('🔄 Starting image compression...');
+        console.log('🔄 API Upload Local POST: Iniciando compresión de imagen...');
         const { compressed, thumbnail } = await compressImage(buffer, uniqueFileName, today);
-        console.log('✅ Image compression completed');
+        console.log('✅ API Upload Local POST: Compresión completada:', {
+          compressed,
+          thumbnail
+        });
 
         const fileData = {
           id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -286,23 +338,33 @@ export async function POST(request: NextRequest) {
         };
 
         processedFiles.push(fileData);
-        console.log(`✅ File processed successfully: ${file.name}`);
+        console.log(`🎉 API Upload Local POST: Archivo procesado exitosamente: ${file.name}`);
         
       } catch (fileError) {
-        console.error(`❌ Error processing file ${file.name}:`, fileError);
+        console.error(`❌ API Upload Local POST: Error procesando archivo ${file.name}:`, {
+          error: fileError,
+          message: fileError instanceof Error ? fileError.message : 'Error desconocido',
+          stack: fileError instanceof Error ? fileError.stack : undefined
+        });
+        
         // Si es un error crítico, devolver error 400
         return NextResponse.json(
           { 
             success: false, 
             message: `Error procesando ${file.name}: ${fileError instanceof Error ? fileError.message : 'Error desconocido'}`,
-            error: 'FILE_PROCESSING_ERROR'
+            error: 'FILE_PROCESSING_ERROR',
+            fileName: file.name,
+            timestamp: new Date().toISOString()
           },
           { status: 400 }
         );
       }
     }
 
+    console.log('✅ API Upload Local POST: Todos los archivos procesados exitosamente');
+
     // Guardar metadata
+    console.log('💾 API Upload Local POST: Guardando metadata del upload...');
     const uploadMetadata = {
       id: `upload_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date().toISOString(),
@@ -317,11 +379,12 @@ export async function POST(request: NextRequest) {
     };
 
     await saveMetadata(uploadMetadata);
+    console.log('✅ API Upload Local POST: Metadata guardada exitosamente');
 
-    console.log(`🎉 Upload completed successfully: ${processedFiles.length} files`);
+    console.log(`🎉 API Upload Local POST: Upload completado exitosamente: ${processedFiles.length} archivos`);
 
     // Respuesta exitosa
-    return NextResponse.json({
+    const response = {
       success: true,
       message: `${processedFiles.length} foto${processedFiles.length > 1 ? 's' : ''} subida${processedFiles.length > 1 ? 's' : ''} exitosamente`,
       data: {
@@ -330,10 +393,18 @@ export async function POST(request: NextRequest) {
         files: processedFiles,
         timestamp: uploadMetadata.timestamp
       }
-    });
+    };
+
+    console.log('✅ API Upload Local POST: Respuesta preparada exitosamente');
+    return NextResponse.json(response);
 
   } catch (error) {
-    console.error('❌ Upload error:', error);
+    console.error('❌ API Upload Local POST: Error general en upload:', {
+      error: error,
+      message: error instanceof Error ? error.message : 'Error desconocido',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
     
     const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
     
@@ -341,7 +412,8 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         message: 'Error interno del servidor durante la subida',
-        error: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        error: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
+        timestamp: new Date().toISOString()
       },
       { status: 500 }
     );

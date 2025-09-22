@@ -51,9 +51,19 @@ const FotoUploader: React.FC = () => {
 
   // Handler para seleccionar archivos
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('📁 FotoUploader: Usuario seleccionó archivos');
     const files = event.target.files;
     if (files) {
+      console.log(`📊 FotoUploader: ${files.length} archivos seleccionados:`, 
+        Array.from(files).map(f => ({ 
+          name: f.name, 
+          size: `${(f.size / 1024 / 1024).toFixed(2)}MB`, 
+          type: f.type 
+        }))
+      );
       setSelectedFiles(Array.from(files));
+    } else {
+      console.log('⚠️ FotoUploader: No se recibieron archivos en el evento');
     }
     // Limpiar el input para permitir seleccionar los mismos archivos de nuevo
     if (event.target) {
@@ -68,14 +78,38 @@ const FotoUploader: React.FC = () => {
 
   // Handler para subir archivos
   const handleUpload = async () => {
+    console.log('🚀 FotoUploader: Iniciando upload con datos:', {
+      filesCount: selectedFiles.length,
+      formData: {
+        uploaderName: formData.uploaderName || 'Sin nombre',
+        comment: formData.comment || 'Sin comentario',
+        eventMoment: formData.eventMoment || 'Sin momento'
+      }
+    });
+    
     if (selectedFiles.length > 0) {
-      await uploadFiles(selectedFiles, formData);
+      console.log('📤 FotoUploader: Llamando a uploadFiles...');
+      try {
+        await uploadFiles(selectedFiles, formData);
+        console.log('✅ FotoUploader: uploadFiles completado exitosamente');
+      } catch (error) {
+        console.error('❌ FotoUploader: Error en uploadFiles:', error);
+      }
+    } else {
+      console.log('⚠️ FotoUploader: No hay archivos para subir');
     }
   };
 
   // Handler para remover archivo
   const removeFile = (index: number) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    console.log(`🗑️ FotoUploader: Removiendo archivo en índice ${index}:`, 
+      selectedFiles[index]?.name || 'Archivo desconocido'
+    );
+    setSelectedFiles((prev) => {
+      const newFiles = prev.filter((_, i) => i !== index);
+      console.log(`📊 FotoUploader: ${newFiles.length} archivos restantes después de remover`);
+      return newFiles;
+    });
   };
 
   // Handler para resetear todo
@@ -123,14 +157,18 @@ const FotoUploader: React.FC = () => {
   // Effect para manejar auto-reset después del éxito
   useEffect(() => {
     if (uploadState.success && autoResetEnabled && selectedFiles.length > 0) {
-      console.log("🕐 Iniciando auto-reset en", AUTO_RESET_DELAY, "segundos");
+      console.log("🕐 FotoUploader: Iniciando auto-reset en", AUTO_RESET_DELAY, "segundos", {
+        success: uploadState.success,
+        autoResetEnabled,
+        filesCount: selectedFiles.length
+      });
 
       // Iniciar countdown visual
       setCountdown(AUTO_RESET_DELAY);
 
       // Timer principal para el reset automático
       autoResetTimerRef.current = setTimeout(() => {
-        console.log("⏰ Ejecutando auto-reset automático");
+        console.log("⏰ FotoUploader: Ejecutando auto-reset automático");
         handleReset();
       }, AUTO_RESET_DELAY * 1000);
 
@@ -139,20 +177,30 @@ const FotoUploader: React.FC = () => {
       countdownTimerRef.current = setInterval(() => {
         currentCount -= 1;
         setCountdown(currentCount);
+        console.log(`⏳ FotoUploader: Countdown restante: ${currentCount}s`);
 
         if (currentCount <= 0) {
           clearInterval(countdownTimerRef.current!);
+          console.log('⏰ FotoUploader: Countdown completado');
         }
       }, 1000);
+    } else {
+      console.log('🚫 FotoUploader: Auto-reset no iniciado:', {
+        success: uploadState.success,
+        autoResetEnabled,
+        filesCount: selectedFiles.length
+      });
     }
 
     // Cleanup cuando el estado de éxito cambie
     return () => {
       if (autoResetTimerRef.current) {
+        console.log('🧹 FotoUploader: Limpiando timer de auto-reset');
         clearTimeout(autoResetTimerRef.current);
         autoResetTimerRef.current = null;
       }
       if (countdownTimerRef.current) {
+        console.log('🧹 FotoUploader: Limpiando timer de countdown');
         clearInterval(countdownTimerRef.current);
         countdownTimerRef.current = null;
       }
