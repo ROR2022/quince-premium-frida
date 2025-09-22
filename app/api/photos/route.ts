@@ -137,6 +137,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    /**
+     *  Antes de guardar, es necesario asegurarse de que
+     *  el nombre de archivo (filename) sea único.
+     *  para eso ademas del nombre se puede usar el campo cloudinaryId
+     *  o una combinación de ambos.
+     */
+
+    photoData.filename = photoData.filename.trim();
+    photoData.originalName = photoData.originalName.trim();
+    if (photoData.cloudinaryId) {
+      photoData.cloudinaryId = photoData.cloudinaryId.trim();
+      photoData.filename = photoData.cloudinaryId;
+      photoData.originalName = photoData.cloudinaryId;
+    }else{
+      // Si no tiene cloudinaryId, usar filename original + timestamp
+      const timestamp = Date.now();
+      const nameWithoutExt = photoData.filename.replace(/\.[^/.]+$/, "");
+      const extension = photoData.filename.split('.').pop();
+      photoData.filename = `${nameWithoutExt}_${timestamp}.${extension}`;
+      photoData.originalName = `${nameWithoutExt}_${timestamp}.${extension}`;
+    }
+
     const photo = new Photo({
       ...photoData,
       uploadedAt: photoData.uploadedAt || new Date(),
