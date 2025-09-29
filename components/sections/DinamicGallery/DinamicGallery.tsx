@@ -59,6 +59,7 @@ const DinamicGallery: React.FC = () => {
     filters, 
     setFilters, 
     refresh,
+    goToPage,
     getPhotoDisplayUrl,
     // 🗑️ Funciones de eliminación
     deletePhoto,
@@ -66,6 +67,15 @@ const DinamicGallery: React.FC = () => {
     deleteError,
     clearDeleteError
   } = useHybridGallery();
+
+  // 🐛 DEBUG: Log del estado de paginación
+  console.log('🔍 DinamicGallery DEBUG - Estado de paginación:', {
+    pagination,
+    photosCount: photos.length,
+    loading,
+    error,
+    fullPagination: pagination ? JSON.stringify(pagination, null, 2) : 'null'
+  });
 
   const [selectedPhoto, setSelectedPhoto] = useState<HybridPhoto | null>(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -104,6 +114,18 @@ const DinamicGallery: React.FC = () => {
     if (deleteError) {
       clearDeleteError();
     }
+  };
+
+  // 🐛 DEBUG: Handler para navegación de páginas
+  const handleGoToPage = (pageNumber: number) => {
+    console.log('🔍 DinamicGallery DEBUG - handleGoToPage llamado:', {
+      pageNumber,
+      currentPage: pagination?.page,
+      totalPages: pagination?.pages,
+      hasNext: pagination?.hasNext,
+      hasPrev: pagination?.hasPrev
+    });
+    goToPage(pageNumber);
   };
 
   const handleConfirmDelete = async (photoId: string) => {
@@ -392,6 +414,147 @@ const DinamicGallery: React.FC = () => {
           </div>
         )}
 
+        {/* 🆕 PAGINACIÓN SUPERIOR - Siempre visible antes de las fotos */}
+        {pagination && (
+          <div className="flex flex-col items-center space-y-4 mb-8">
+            {/* Información de página */}
+            <div 
+              className="px-4 py-2 rounded-lg text-center"
+              style={{
+                background: `linear-gradient(135deg, ${VIP_COLORS.cremaSuave}, ${VIP_COLORS.blancoSeda})`,
+                color: VIP_COLORS.rosaIntensa
+              }}
+            >
+              <p className="text-sm font-medium">
+                📸 Página {pagination.page} de {pagination.pages}
+              </p>
+              <p className="text-xs opacity-75">
+                {pagination.total} foto{pagination.total !== 1 ? 's' : ''} en total
+                {pagination.pages > 1 && (
+                  <span className="ml-2">• {50 * (pagination.page - 1) + 1}-{Math.min(50 * pagination.page, pagination.total)} mostradas</span>
+                )}
+              </p>
+            </div>
+
+            {/* Controles de navegación - Solo si hay más de 1 página */}
+            {pagination.pages > 1 && (
+              <div className="flex items-center justify-center space-x-2 flex-wrap">
+                {/* Primera página */}
+                <button
+                  onClick={() => {
+                    console.log('🔍 Botón "Primera" página clickeado');
+                    handleGoToPage(1);
+                  }}
+                  disabled={!pagination.hasPrev || loading}
+                  className="flex items-center px-3 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  style={{
+                    borderColor: VIP_COLORS.oroAurora,
+                    color: VIP_COLORS.rosaAurora,
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  Primera
+                </button>
+
+                {/* Página anterior */}
+                <button
+                  onClick={() => {
+                    console.log('🔍 Botón "Anterior" página clickeado');
+                    handleGoToPage(pagination.page - 1);
+                  }}
+                  disabled={!pagination.hasPrev || loading}
+                  className="flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    borderColor: VIP_COLORS.oroAurora,
+                    color: VIP_COLORS.rosaAurora,
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  <ChevronLeft size={18} className="mr-1" />
+                  Anterior
+                </button>
+
+                {/* Indicador de página actual */}
+                <div 
+                  className="px-4 py-2 rounded-lg font-semibold min-w-[80px] text-center"
+                  style={{
+                    background: `linear-gradient(135deg, ${VIP_COLORS.rosaAurora}, ${VIP_COLORS.rosaIntensa})`,
+                    color: 'white'
+                  }}
+                >
+                  {pagination.page} / {pagination.pages}
+                </div>
+
+                {/* Página siguiente */}
+                <button
+                  onClick={() => {
+                    console.log('🔍 Botón "Siguiente" página clickeado');
+                    handleGoToPage(pagination.page + 1);
+                  }}
+                  disabled={!pagination.hasNext || loading}
+                  className="flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    borderColor: VIP_COLORS.oroAurora,
+                    color: VIP_COLORS.rosaAurora,
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  Siguiente
+                  <ChevronRight size={18} className="ml-1" />
+                </button>
+
+                {/* Última página */}
+                <button
+                  onClick={() => {
+                    console.log('🔍 Botón "Última" página clickeado');
+                    handleGoToPage(pagination.pages);
+                  }}
+                  disabled={!pagination.hasNext || loading}
+                  className="flex items-center px-3 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  style={{
+                    borderColor: VIP_COLORS.oroAurora,
+                    color: VIP_COLORS.rosaAurora,
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  Última
+                </button>
+              </div>
+            )}
+
+            {/* Navegación rápida (solo en desktop y si hay múltiples páginas) */}
+            {pagination.pages > 1 && (
+              <div className="hidden md:flex items-center space-x-2">
+                <span 
+                  className="text-sm font-medium"
+                  style={{ color: VIP_COLORS.rosaIntensa }}
+                >
+                  Ir a página:
+                </span>
+                <input
+                  type="number"
+                  min="1"
+                  max={pagination.pages}
+                  value={pagination.page}
+                  onChange={(e) => {
+                    const pageNum = parseInt(e.target.value);
+                    if (pageNum >= 1 && pageNum <= pagination.pages) {
+                      goToPage(pageNum);
+                    }
+                  }}
+                  disabled={loading}
+                  className="w-16 px-2 py-1 text-center border-2 rounded-lg transition-colors duration-200 focus:outline-none disabled:opacity-50"
+                  style={{
+                    borderColor: `${VIP_COLORS.oroAurora}60`,
+                    backgroundColor: VIP_COLORS.cremaSuave,
+                    color: VIP_COLORS.rosaIntensa
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Estado de carga */}
         {loading && (
           <div className="text-center py-12">
@@ -530,7 +693,7 @@ const DinamicGallery: React.FC = () => {
         )}
 
         {/** Regresar al hasta arriba */}
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-6">
           <Link
             href="#top"
             className="inline-flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105"
@@ -545,44 +708,151 @@ const DinamicGallery: React.FC = () => {
           </Link>
         </div>
 
-        {/* Paginación - Temporalmente deshabilitada */}
-        {pagination && pagination.pages > 1 && false && (
-          <div className="flex items-center justify-center space-x-4">
-            <button
-              disabled={true}
-              className="flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+        {/* 📄 PAGINACIÓN INFERIOR - Duplicada para navegación post-visualización */}
+        {pagination && pagination.pages > 1 && (
+          <div className="flex flex-col items-center space-y-4 mb-8 pt-6 border-t-2" style={{ borderColor: `${VIP_COLORS.oroAurora}30` }}>
+            {/* Título de sección */}
+            <div 
+              className="px-4 py-2 rounded-lg text-center"
               style={{
-                borderColor: VIP_COLORS.oroAurora,
-                color: VIP_COLORS.rosaAurora,
-                backgroundColor: 'transparent'
+                background: `linear-gradient(135deg, ${VIP_COLORS.oroAurora}20, ${VIP_COLORS.rosaAurora}20)`,
+                color: VIP_COLORS.rosaIntensa
               }}
             >
-              <ChevronLeft size={18} className="mr-1" />
-              Anterior
-            </button>
+              <p className="text-sm font-medium">
+                🔄 Navegación de Páginas
+              </p>
+            </div>
 
-            <span 
-              className="px-4 py-2 rounded-lg"
+            {/* Información de página */}
+            <div 
+              className="px-4 py-2 rounded-lg text-center"
               style={{
-                background: `linear-gradient(135deg, ${VIP_COLORS.rosaAurora}, ${VIP_COLORS.rosaIntensa})`,
-                color: 'white'
+                background: `linear-gradient(135deg, ${VIP_COLORS.cremaSuave}, ${VIP_COLORS.blancoSeda})`,
+                color: VIP_COLORS.rosaIntensa
               }}
             >
-              {pagination?.page || 1} de {pagination?.pages || 1}
-            </span>
+              <p className="text-sm font-medium">
+                📸 Página {pagination.page} de {pagination.pages}
+              </p>
+              <p className="text-xs opacity-75">
+                {pagination.total} foto{pagination.total !== 1 ? 's' : ''} en total
+                <span className="ml-2">• {50 * (pagination.page - 1) + 1}-{Math.min(50 * pagination.page, pagination.total)} mostradas</span>
+              </p>
+            </div>
 
-            <button
-              disabled={true}
-              className="flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                borderColor: VIP_COLORS.oroAurora,
-                color: VIP_COLORS.rosaAurora,
-                backgroundColor: 'transparent'
-              }}
-            >
-              Siguiente
-              <ChevronRight size={18} className="ml-1" />
-            </button>
+            {/* Controles de navegación */}
+            <div className="flex items-center justify-center space-x-2 flex-wrap">
+              {/* Primera página */}
+              <button
+                onClick={() => {
+                  console.log('🔍 Botón "Primera" (inferior) página clickeado');
+                  handleGoToPage(1);
+                }}
+                disabled={!pagination.hasPrev || loading}
+                className="flex items-center px-3 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                style={{
+                  borderColor: VIP_COLORS.oroAurora,
+                  color: VIP_COLORS.rosaAurora,
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Primera
+              </button>
+
+              {/* Página anterior */}
+              <button
+                onClick={() => {
+                  console.log('🔍 Botón "Anterior" (inferior) página clickeado');
+                  handleGoToPage(pagination.page - 1);
+                }}
+                disabled={!pagination.hasPrev || loading}
+                className="flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: VIP_COLORS.oroAurora,
+                  color: VIP_COLORS.rosaAurora,
+                  backgroundColor: 'transparent'
+                }}
+              >
+                <ChevronLeft size={18} className="mr-1" />
+                Anterior
+              </button>
+
+              {/* Indicador de página actual */}
+              <div 
+                className="px-4 py-2 rounded-lg font-semibold min-w-[80px] text-center"
+                style={{
+                  background: `linear-gradient(135deg, ${VIP_COLORS.rosaAurora}, ${VIP_COLORS.rosaIntensa})`,
+                  color: 'white'
+                }}
+              >
+                {pagination.page} / {pagination.pages}
+              </div>
+
+              {/* Página siguiente */}
+              <button
+                onClick={() => {
+                  console.log('🔍 Botón "Siguiente" (inferior) página clickeado');
+                  handleGoToPage(pagination.page + 1);
+                }}
+                disabled={!pagination.hasNext || loading}
+                className="flex items-center px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: VIP_COLORS.oroAurora,
+                  color: VIP_COLORS.rosaAurora,
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Siguiente
+                <ChevronRight size={18} className="ml-1" />
+              </button>
+
+              {/* Última página */}
+              <button
+                onClick={() => {
+                  console.log('🔍 Botón "Última" (inferior) página clickeado');
+                  handleGoToPage(pagination.pages);
+                }}
+                disabled={!pagination.hasNext || loading}
+                className="flex items-center px-3 py-2 rounded-lg border-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                style={{
+                  borderColor: VIP_COLORS.oroAurora,
+                  color: VIP_COLORS.rosaAurora,
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Última
+              </button>
+            </div>
+
+            {/* Navegación rápida (solo en desktop) */}
+            <div className="hidden md:flex items-center space-x-2">
+              <span 
+                className="text-sm font-medium"
+                style={{ color: VIP_COLORS.rosaIntensa }}
+              >
+                Ir a página:
+              </span>
+              <input
+                type="number"
+                min="1"
+                max={pagination.pages}
+                value={pagination.page}
+                onChange={(e) => {
+                  const pageNum = parseInt(e.target.value);
+                  if (pageNum >= 1 && pageNum <= pagination.pages) {
+                    goToPage(pageNum);
+                  }
+                }}
+                disabled={loading}
+                className="w-16 px-2 py-1 text-center border-2 rounded-lg transition-colors duration-200 focus:outline-none disabled:opacity-50"
+                style={{
+                  borderColor: `${VIP_COLORS.oroAurora}60`,
+                  backgroundColor: VIP_COLORS.cremaSuave,
+                  color: VIP_COLORS.rosaIntensa
+                }}
+              />
+            </div>
           </div>
         )}
       </div>

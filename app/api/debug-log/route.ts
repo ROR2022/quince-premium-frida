@@ -27,6 +27,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'timestamp es requerido y debe ser una fecha válida en formato ISO 8601' }, { status: 400 });
     }
 
+    // Loguear el mensaje solo cuando es un error
+    if (data.level === 'error'|| data.message.toLowerCase().includes('error')) {
+      console.error(`[ERROR] ${data.timestamp}: ${data.message}`);
+    }
     // Aquí se podría guardar el log en una base de datos o servicio externo
     console.log(`[${data.level.toUpperCase()}] ${data.timestamp}: ${data.message}`);
 

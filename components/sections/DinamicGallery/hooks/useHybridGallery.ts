@@ -231,11 +231,24 @@ export const useHybridGallery = () => {
         },
       });
 
+      console.log('🔍 useHybridGallery DEBUG - fetchPhotosFromMongoDB API call:', {
+        url: `/api/photos?${queryParams}`,
+        status: response.status,
+        ok: response.ok
+      });
+
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
+
+      console.log('🔍 useHybridGallery DEBUG - fetchPhotosFromMongoDB respuesta API:', {
+        photosCount: data.photos?.length || 0,
+        pagination: data.pagination,
+        totalPhotoIds: data.photos?.map((p: any) => p._id).slice(0, 5), // Primeros 5 IDs para debug
+        fullPaginationDetails: JSON.stringify(data.pagination, null, 2)
+      });
       
       // Convertir respuesta de MongoDB a formato híbrido
       const photos: HybridPhoto[] = (data.photos || []).map((photo: MongoDBPhotoResponse): HybridPhoto => ({
@@ -259,9 +272,9 @@ export const useHybridGallery = () => {
 
       const pagination: HybridGalleryPagination = {
         page: data.pagination?.page || 1,
-        pages: data.pagination?.totalPages || 1,
-        hasNext: data.pagination?.hasNext || false,
-        hasPrev: data.pagination?.hasPrev || false,
+        pages: data.pagination?.pages || data.pagination?.totalPages || 1, // Mapear 'pages' correctamente
+        hasNext: data.pagination?.hasNext || (data.pagination?.page < (data.pagination?.pages || data.pagination?.totalPages || 1)),
+        hasPrev: data.pagination?.hasPrev || (data.pagination?.page > 1),
         total: data.pagination?.total || photos.length
       };
 
@@ -320,6 +333,7 @@ export const useHybridGallery = () => {
    * 🆕 Carga fotos desde MongoDB
    */
   const loadPhotos = useCallback(async (page = 1) => {
+    console.log('🔍 useHybridGallery DEBUG - loadPhotos llamado:', { page });
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
@@ -328,6 +342,13 @@ export const useHybridGallery = () => {
         fetchPhotosFromMongoDB(page),
         fetchStatsFromMongoDB()
       ]);
+
+      console.log('🔍 useHybridGallery DEBUG - loadPhotos resultado:', {
+        photosCount: photos.length,
+        pagination,
+        stats,
+        fullPaginationObject: JSON.stringify(pagination, null, 2)
+      });
 
       setState(prev => ({
         ...prev,
@@ -338,6 +359,7 @@ export const useHybridGallery = () => {
       }));
 
     } catch (error) {
+      console.error('🔍 useHybridGallery DEBUG - loadPhotos error:', error);
       setState(prev => ({
         ...prev,
         loading: false,
@@ -367,8 +389,13 @@ export const useHybridGallery = () => {
    * Cambia a página específica
    */
   const goToPage = useCallback((page: number) => {
+    console.log('🔍 useHybridGallery DEBUG - goToPage llamado:', { 
+      page, 
+      currentPagination: state.pagination,
+      currentPhotosCount: state.photos.length 
+    });
     loadPhotos(page);
-  }, [loadPhotos]);
+  }, [loadPhotos, state.pagination, state.photos.length]);
 
   /**
    * 🆕 Obtiene la URL optimizada para mostrar una foto (desde MongoDB)
