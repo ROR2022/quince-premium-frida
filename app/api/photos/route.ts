@@ -56,6 +56,9 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category')
     const tag = searchParams.get('tag')
     const search = searchParams.get('search')
+    // 🆕 Parámetros de ordenamiento
+    const sortBy = searchParams.get('sortBy') || 'uploadedAt'
+    const sortOrder = searchParams.get('sortOrder') || 'desc'
 
     console.log('📋 API Photos GET: Parámetros de búsqueda:', {
       page,
@@ -63,6 +66,8 @@ export async function GET(request: NextRequest) {
       category,
       tag,
       search,
+      sortBy,
+      sortOrder,
       url: request.url
     });
 
@@ -88,13 +93,35 @@ export async function GET(request: NextRequest) {
 
     console.log('📝 API Photos GET: Query final para MongoDB:', JSON.stringify(query, null, 2));
 
+    // 🆕 Mapeo de campos de ordenamiento (frontend → MongoDB)
+    const sortFieldMap: Record<string, string> = {
+      'uploadedAt': 'uploadedAt',
+      'viewCount': 'viewCount',
+      'originalName': 'originalName',
+      // Fallback para compatibilidad
+      'uploadDate': 'uploadedAt'
+    };
+
+    // 🆕 Determinar campo y dirección de ordenamiento
+    const sortField = sortFieldMap[sortBy] || 'uploadedAt';
+    const sortDirection = sortOrder === 'asc' ? 1 : -1;
+    const sortObject: Record<string, 1 | -1> = { [sortField]: sortDirection as 1 | -1 };
+
+    console.log('🔄 API Photos GET: Configuración de ordenamiento:', {
+      sortBy,
+      sortOrder,
+      sortField,
+      sortDirection,
+      sortObject
+    });
+
     const skip = (page - 1) * limit
     console.log('📊 API Photos GET: Paginación - skip:', skip, 'limit:', limit);
 
     console.log('🔄 API Photos GET: Ejecutando consultas a MongoDB...');
     const [photos, total] = await Promise.all([
       Photo.find(query)
-        .sort({ uploadDate: -1 })
+        .sort(sortObject)
         .skip(skip)
         .limit(limit)
         .lean(),
