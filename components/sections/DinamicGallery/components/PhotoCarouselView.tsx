@@ -216,7 +216,7 @@ export const PhotoCarouselView: React.FC<PhotoCarouselViewProps> = ({
                     src={getPhotoDisplayUrl(photo, 'compressed')}
                     alt={`Foto: ${photo.originalName}`}
                     fill
-                    className="object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
+                    className="object-contain cursor-pointer transition-transform duration-500 group-hover:scale-105"
                     onClick={() => onPhotoSelect(photo)}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     priority={index < 2} // Priorizar las primeras 2 imágenes
